@@ -75,45 +75,50 @@ V_CV cv_in 0 1V ; Simulating 1 octave above base (C5)
 
 * --- 1. Exponential Converter ---
 * U1A: CV Summing Node (NTE987)
-* in+ in- out v+ v-
-U1A 0 cv_sum cv_node vcc vee
+*   in+ in-    out     v+  v-
+U1A 0   cv_sum cv_node vcc vee
 R1 cv_in cv_sum 100k
 R_TEMPCO cv_node cv_sum 2k ; Representing 3300ppm PTC resistor
 
 * Q1, Q2: Matched NPN Pair (NTE47)
-* C B E
-Q1 expo_ref 0 expo_emit NTE47
+*  C         B       E
+Q1 expo_ref  0       expo_emit NTE47
 Q2 expo_curr cv_node expo_emit NTE47
 R_BIAS vcc expo_ref 100k
 R_E expo_emit vee 1k
 
 * --- 2. Sawtooth Core ---
 * U1C: Integrator (NTE987)
-* in+ in- out v+ v-
-U1C 0 core_in core_saw vcc vee
+*   in+ in-     out      v+  v-
+U1C 0   core_in core_saw vcc vee
 C_TIME core_saw core_in 1n ; Polystyrene timing capacitor
 * Exponential current injection
 R_INJECT expo_curr core_in 0
 
 * Reset Loop (Comparator + JFET)
 * U1D: Reset Comparator
-* in+ in- out v+ v-
+*   in+      in-   out        v+  v-
 U1D core_saw v_ref reset_gate vcc vee
 V_REF v_ref 0 5V ; Reset threshold
 
 * Q3: Reset Switch (NTE467)
-* D G S
+*  D        G          S
 Q3 core_saw reset_gate 0 NTE467
 
 * --- 3. Waveform Shapers & Sub-Osc ---
 * U2A: Square Wave Comparator
-U2A core_saw 0 square_raw vcc vee
+*   in+      in- out        v+  v-
+U2A core_saw 0   square_raw vcc vee
 
 * Sub-Oscillator: Discrete BJT Flip-Flop (VET123AP)
 * Toggles state on every reset_gate pulse
 C_TRIG reset_gate sub_trig 100p
 R_TRIG sub_trig 0 10k
-* C B E
+* Steering Diodes: Oriented to pull the 'ON' base low on the falling edge
+D2 sub_trig_b sub_trig 1N4148
+D3 sub_trig_not sub_trig 1N4148
+
+*  C           B          E
 Q4 sub_out_raw sub_trig_b 0 VET123AP
 Q5 sub_not_q sub_trig_not 0 VET123AP
 R_CROSS1 sub_out_raw sub_trig_not 10k
@@ -125,17 +130,20 @@ R_L2 vcc sub_not_q 4.7k
 * Gain of 4 to scale 0-5V core to 20Vpp, then offset by -10V
 
 * Sawtooth Output
+*   in+      in-     out        v+  v-
 U2B core_saw saw_inv saw_scaled vcc vee
 R_S1 core_saw saw_inv 10k
 R_S2 saw_scaled saw_inv 40k
 V_SOFF saw_inv 0 2.5V ; Bias for +/-10V swing
 
 * Square Output
+*   in+        in-    out       v+  v-
 U2C square_raw sq_inv sq_scaled vcc vee
 R_SQ1 square_raw sq_inv 10k
 R_SQ2 sq_scaled sq_inv 10k
 
 * Sub Output
+*   in+         in-     out        v+  v-
 U2D sub_out_raw sub_inv sub_scaled vcc vee
 R_SUB1 sub_out_raw sub_inv 10k
 R_SUB2 sub_scaled sub_inv 40k
