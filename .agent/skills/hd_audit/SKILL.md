@@ -47,10 +47,9 @@ When performing an audit:
 *   **NTE159**: PNP BJT (General Purpose).
 *   **NTE987**: Quad Op-Amp.
 *   **NTE976**: Precision Single Op-Amp (JFET Input).
-```
 
-This skill can now be invoked whenever you need to validate a `DESIGN.md` file before moving to the prototyping or PCB layout phase.
-
-<!--
-[PROMPT_SUGGESTION]Run the hd_audit skill on the current DESIGN.md for the VCO.[/PROMPT_SUGGESTION]
-[PROMPT_SUGGESTION]Can the hd_audit skill check for impedance mismatches between stages?[/PROMPT_SUGGESTION]
+## 4. Audit Trail
+*   Create an "Audit Trail" section at the end of the DESIGN.md if it does not already exist.
+*   All changes made to the DESIGN.md file *must* be added to a section at the end of the design document in a section called Audit Trail.
+*   Each change should be described in a bullet point.
+*   In addition to creating a history of revisions, this section also prevents an infinite loop of revisions bouncing between two designs.
