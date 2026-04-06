@@ -13,11 +13,11 @@ The heart of the pitch stability lies in the Exponential Converter.
 *   **Reset Mechanism**: A high-speed comparator monitors the ramp. When it reaches a threshold ($+5\text{V}$), it triggers a narrow pulse. This pulse drives an N-Channel JFET switch that instantly shorts the capacitor to ground, resetting the ramp and creating the sawtooth fall.
 
 ### 1.3 Waveshapers & Sub-Oscillator
-*   **Square Wave**: A comparator compares the sawtooth ramp against a $0\text{V}$ reference. The output is a pulse wave with a 50% duty cycle.
+*   **Square Wave**: A comparator compares the sawtooth ramp against a $2.5\text{V}$ reference (the midpoint of the $0-5\text{V}$ ramp). The output is a pulse wave with a 50% duty cycle.
 *   **Sub-Oscillator**: The reset pulse from the sawtooth core acts as a clock for a **Discrete BJT Toggle Flip-Flop**. This bistable multivibrator switches state on every clock pulse, producing a square wave at exactly half the frequency ($f/2$) of the core.
 
 ### 1.4 Output Scaling ($\pm 10\text{V}$)
-Standard Eurorack signals are $10\text{V}_{pp}$ ($\pm 5\text{V}$). To reach the requested $\pm 10\text{V}$ ($20\text{V}_{pp}$), each output (Saw, Square, Sub) is passed through a non-inverting gain stage ($A_v = 2$) with adjustable offset trimming. The $\pm 15\text{V}$ rails provide $5\text{V}$ of headroom, ensuring no clipping.
+Standard Eurorack signals are $10\text{V}_{pp}$ ($\pm 5\text{V}$). To reach the requested $\pm 10\text{V}$ ($20\text{V}_{pp}$) from the internal $5\text{V}$ core, each output (Saw, Square, Sub) is passed through a non-inverting gain stage ($A_v = 4$) with adjustable offset trimming. The $\pm 15\text{V}$ rails provide $5\text{V}$ of headroom, ensuring no clipping.
 
 ## 2. Technical Specifications
 *   **Primary Waveform**: Sawtooth ($\pm 10\text{V}$)
@@ -93,7 +93,7 @@ R_E expo_emit vee 1k
 U1C 0   core_in core_saw vcc vee
 C_TIME core_saw core_in 1n ; Polystyrene timing capacitor
 * Exponential current injection
-R_INJECT expo_curr core_in 0
+R_INJECT expo_curr core_in 1m
 
 * Reset Loop (Comparator + JFET)
 * U1D: Reset Comparator
@@ -108,7 +108,8 @@ Q3 core_saw reset_gate 0 NTE467
 * --- 3. Waveform Shapers & Sub-Osc ---
 * U2A: Square Wave Comparator
 *   in+      in- out        v+  v-
-U2A core_saw 0   square_raw vcc vee
+U2A core_saw sq_ref square_raw vcc vee
+V_SQREF sq_ref 0 2.5V ; Mid-point for 50% duty cycle
 
 * Sub-Oscillator: Discrete BJT Flip-Flop (VET123AP)
 * Toggles state on every reset_gate pulse
@@ -163,5 +164,9 @@ V_SUBOFF sub_inv 0 2.5V
 3.  **Square & Sub**: A comparator for the primary square and a discrete BJT-based toggle flip-flop for the $f/2$ sub-oscillator.
 4.  **$\pm 10\text{V}$ Range**: Dedicated gain stages scale the internal core voltages to the full $\pm 10\text{V}$ swing.
 
+## 7. Audit Trail (hd_audit)
+*   **Gain Correction**: The original design specified $A_v=2$, which would only produce $10\text{V}_{pp}$ from the $5\text{V}$ ramp. Updated to $A_v=4$ to achieve the $\pm 10\text{V}$ target.
+*   **Reference Alignment**: A $0\text{V}$ comparison against a $0-5\text{V}$ ramp results in a static high signal. The reference was shifted to $2.5\text{V}$ to ensure a symmetric pulse width.
+*   **Simulation Stability**: Replaced the ideal $0\Omega$ resistor with a $1\text{m}\Omega$ shunt to prevent matrix singularity errors in ngspice.
 
 ```
