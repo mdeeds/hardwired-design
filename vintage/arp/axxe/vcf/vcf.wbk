@@ -1,0 +1,44 @@
+{
+  "custom_cursors": 2,
+  "last_sch_text_sim_command": "",
+  "tabs": [
+    {
+      "analysis": "TRAN",
+      "commands": [
+        ".tran 50u 5m",
+        ".kicad adjustpaths",
+        ".save all",
+        ".probe alli",
+        ".probe allp"
+      ],
+      "dottedSecondary": true,
+      "margins": {
+        "bottom": 45,
+        "left": 70,
+        "right": 70,
+        "top": 30
+      },
+      "measurements": [],
+      "showGrid": true,
+      "traces": [
+        {
+          "color": "rgb(255, 255, 51)",
+          "signal": "V(/LADDER_L1)",
+          "trace_type": 257
+        },
+        {
+          "color": "rgb(255, 127, 0)",
+          "signal": "V(/LADDER_R1)",
+          "trace_type": 257
+        },
+        {
+          "color": "rgb(77, 175, 74)",
+          "signal": "V(/MIX_IN)",
+          "trace_type": 257
+        }
+      ]
+    }
+  ],
+  "user_defined_signals": [],
+  "version": 7
+}
