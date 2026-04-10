@@ -117,8 +117,14 @@ def run_netlist(
     dll_path: str,
     netlist: str,
     lib_dirs: list[str] | None = None,
+    source_dir: str | None = None,
 ) -> tuple[str, dict[str, list[float]]]:
-    """Run netlist, return (text_output, {vector_name: [values]})."""
+    """Run netlist, return (text_output, {vector_name: [values]}).
+
+    source_dir: directory to write the temp netlist file into so that
+    .LIB / .INCLUDE directives with relative paths resolve correctly.
+    Defaults to the system temp directory.
+    """
     output_lines: list[str] = []
 
     # ── Callbacks ───────────────────────────────────────────────────
@@ -182,11 +188,29 @@ def run_netlist(
 
     # ── Write netlist to temp file, then source it ──────────────────
     with tempfile.NamedTemporaryFile(
-        mode="w", suffix=".cir", delete=False, encoding="utf-8"
+        mode="w", suffix=".cir", delete=False, encoding="utf-8",
+        dir=source_dir,
     ) as f:
         cleaned = netlist.strip()
         if not cleaned.lower().endswith(".end"):
             cleaned += "\n.end\n"
+        # Inline .LIB / .INCLUDE files so ngspice never needs to resolve paths.
+        # ngspice shared-library mode does not reliably honour sourcepath for
+        # .LIB directives, so we substitute the file content here instead.
+        if source_dir:
+            abs_source_dir = os.path.abspath(source_dir)
+            def _inline_lib(m: re.Match) -> str:
+                directive, rel_path = m.group(1), m.group(2)
+                full_path = rel_path if os.path.isabs(rel_path) else os.path.join(abs_source_dir, rel_path)
+                if os.path.isfile(full_path):
+                    lib_text = Path(full_path).read_text(encoding="utf-8")
+                    return f"* --- inlined {directive} {rel_path} ---\n{lib_text}\n* --- end inline ---"
+                return m.group(0)  # leave unchanged if file not found
+            cleaned = re.sub(
+                r'(?im)^(\.(?:lib|include))\s+"([^"]+)"',
+                _inline_lib,
+                cleaned,
+            )
         f.write(cleaned)
         tmp_path = f.name
 
@@ -324,10 +348,14 @@ def run_md(
 
     dll_path, lib_dirs = setup_ngspice(extra_lib_dirs)
     md_dir = os.path.dirname(os.path.abspath(md_path))
+    # Always include the source file's directory so .LIB / .INCLUDE
+    # directives with relative paths can be resolved.
+    if md_dir not in lib_dirs:
+        lib_dirs.insert(0, md_dir)
     results = []
 
     for i, (label, netlist) in enumerate(blocks):
-        text_output, vectors = run_netlist(dll_path, netlist, lib_dirs)
+        text_output, vectors = run_netlist(dll_path, netlist, lib_dirs, source_dir=md_dir)
 
         if save_outputs:
             safe_label = re.sub(r"[^\w\-]", "_", label)[:60]
@@ -379,6 +407,11 @@ def main():
     kind = "SPICE file" if is_spice_file(md_path) else f"'{md_path}'"
     print(f"Found {len(blocks)} SPICE block(s) in {kind}.")
     dll_path, lib_dirs = setup_ngspice(args.libdir)
+    # Always include the source file's directory so .LIB / .INCLUDE
+    # directives with relative paths can be resolved.
+    md_dir_auto = os.path.dirname(os.path.abspath(md_path))
+    if md_dir_auto not in lib_dirs:
+        lib_dirs.insert(0, md_dir_auto)
     print(f"Using ngspice: {dll_path}")
     if lib_dirs:
         print(f"Library paths: {', '.join(lib_dirs)}")
@@ -391,7 +424,7 @@ def main():
         print(f"Running block {i}: {label}")
         print(f"{'='*60}")
 
-        text_output, vectors = run_netlist(dll_path, netlist, lib_dirs)
+        text_output, vectors = run_netlist(dll_path, netlist, lib_dirs, source_dir=md_dir)
 
         # Save text output (backward compatible)
         out_name = f"sim_output_{i}_{safe_label}.txt"
