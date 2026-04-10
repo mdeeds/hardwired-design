@@ -1,11 +1,14 @@
 """
-run_spice.py — Extract SPICE netlists from a DESIGN.md file and run them
-               through ngspice (shared library), saving CSV + text output.
+run_spice.py — Run SPICE netlists through ngspice (shared library),
+               saving CSV + text output.
 
 Usage:
-    python run_spice.py [path/to/DESIGN.md] [--libdir path/to/libs]
+    python run_spice.py [path/to/DESIGN.md | path/to/netlist.sp] [--libdir path/to/libs]
 
-If no path is given, defaults to DESIGN.md in the current directory.
+If a .md file is given (default: DESIGN.md), SPICE blocks are extracted
+from fenced ```spice code blocks.  If a SPICE file (.sp, .cir, .spice,
+.net) is given, it is used directly as a netlist.
+
 The --libdir option adds a directory to ngspice's source search path,
 allowing .include/.lib directives to find model files.
 
@@ -256,15 +259,98 @@ def write_csv(csv_path: str, vectors: dict[str, list[float]]) -> None:
             writer.writerow([vectors[name][i] for name in names])
 
 
+def setup_ngspice(
+    extra_lib_dirs: list[str] | None = None,
+) -> tuple[str, list[str]]:
+    """Find ngspice DLL and assemble library search paths.
+
+    Returns (dll_path, lib_dirs).
+    """
+    kicad_dir = find_kicad_version_dir()
+    dll_path = find_ngspice_dll(kicad_dir)
+
+    lib_dirs = list(extra_lib_dirs or [])
+    kicad_spice_lib = os.path.join(kicad_dir, "share", "kicad", "symbols")
+    if os.path.isdir(kicad_spice_lib):
+        lib_dirs.append(kicad_spice_lib)
+
+    return dll_path, lib_dirs
+
+
+SPICE_EXTENSIONS = {".sp", ".cir", ".spice", ".net"}
+
+
+def is_spice_file(path: str) -> bool:
+    """Return True if *path* looks like a raw SPICE netlist file."""
+    return Path(path).suffix.lower() in SPICE_EXTENSIONS
+
+
+def load_blocks(path: str) -> list[tuple[str, str]]:
+    """Return (label, netlist) pairs from *path*.
+
+    For .md files, extracts fenced ```spice blocks.
+    For SPICE files, returns the whole file as a single block.
+    """
+    if is_spice_file(path):
+        text = Path(path).read_text(encoding="utf-8")
+        first_line = text.strip().split("\n")[0]
+        if first_line.startswith("*"):
+            label = first_line.lstrip("* ").strip()
+        else:
+            label = Path(path).stem
+        return [(label, text)]
+    else:
+        blocks = extract_spice_blocks(path)
+        if not blocks:
+            raise ValueError(f"No ```spice blocks found in '{path}'.")
+        return blocks
+
+
+def run_md(
+    md_path: str,
+    extra_lib_dirs: list[str] | None = None,
+    save_outputs: bool = True,
+) -> list[tuple[str, str, dict[str, list[float]]]]:
+    """Load SPICE netlist(s) from *md_path* and run each, return results.
+
+    Accepts .md files (extracts ```spice blocks) or SPICE files directly.
+    Returns list of (label, text_output, vectors) per block.
+    When *save_outputs* is True, writes .txt and .csv next to the source file.
+    """
+    if not os.path.isfile(md_path):
+        raise FileNotFoundError(f"'{md_path}' not found.")
+
+    blocks = load_blocks(md_path)
+
+    dll_path, lib_dirs = setup_ngspice(extra_lib_dirs)
+    md_dir = os.path.dirname(os.path.abspath(md_path))
+    results = []
+
+    for i, (label, netlist) in enumerate(blocks):
+        text_output, vectors = run_netlist(dll_path, netlist, lib_dirs)
+
+        if save_outputs:
+            safe_label = re.sub(r"[^\w\-]", "_", label)[:60]
+            out_path = os.path.join(md_dir, f"sim_output_{i}_{safe_label}.txt")
+            Path(out_path).write_text(text_output, encoding="utf-8")
+            if vectors:
+                csv_path = os.path.join(md_dir, f"sim_output_{i}_{safe_label}.csv")
+                write_csv(csv_path, vectors)
+
+        results.append((label, text_output, vectors))
+
+    return results
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Extract and run SPICE netlists from DESIGN.md files."
+        description="Run SPICE netlists from .md or .sp/.cir/.spice/.net files."
     )
     parser.add_argument(
         "md_path",
         nargs="?",
         default="DESIGN.md",
-        help="Path to the DESIGN.md file (default: DESIGN.md)",
+        help="Path to a DESIGN.md or SPICE netlist file (default: DESIGN.md)",
     )
     parser.add_argument(
         "--libdir",
@@ -284,22 +370,18 @@ def main():
         print(f"Error: '{md_path}' not found.", file=sys.stderr)
         sys.exit(1)
 
-    blocks = extract_spice_blocks(md_path)
-    if not blocks:
-        print(f"No ```spice blocks found in '{md_path}'.", file=sys.stderr)
+    try:
+        blocks = load_blocks(md_path)
+    except ValueError as exc:
+        print(f"Error: {exc}", file=sys.stderr)
         sys.exit(1)
 
-    print(f"Found {len(blocks)} SPICE block(s) in '{md_path}'.")
-    kicad_dir = find_kicad_version_dir()
-    dll_path = find_ngspice_dll(kicad_dir)
+    kind = "SPICE file" if is_spice_file(md_path) else f"'{md_path}'"
+    print(f"Found {len(blocks)} SPICE block(s) in {kind}.")
+    dll_path, lib_dirs = setup_ngspice(args.libdir)
     print(f"Using ngspice: {dll_path}")
-
-    # Auto-include KiCad's built-in SPICE library directory
-    kicad_spice_lib = os.path.join(kicad_dir, "share", "kicad", "symbols")
-    lib_dirs = list(args.libdir)
-    if os.path.isdir(kicad_spice_lib):
-        lib_dirs.append(kicad_spice_lib)
-        print(f"Auto-added KiCad SPICE lib: {kicad_spice_lib}")
+    if lib_dirs:
+        print(f"Library paths: {', '.join(lib_dirs)}")
     print()
 
     md_dir = os.path.dirname(os.path.abspath(md_path))
