@@ -1,0 +1,939 @@
+* ================================================================
+* VETCO EURORACK SPICE LIBRARY
+* File: vetco_eurorack.lib
+* Compatible with: ngspice 38+
+*
+* A combined model library for all components in the
+* Vetco Electronics Eurorack sourcing list.
+*
+* CONTENTS:
+*   Section 1  — Bipolar Junction Transistors (BJT)
+*   Section 2  — Junction Field-Effect Transistors (JFET)
+*   Section 3  — Operational Amplifiers (package + single-section cores)
+*   Section 4  — Audio Amplifiers & Preamps
+*
+* CROSS-REFERENCE TABLE:
+*   NTE987   → LM324  (quad low-power op-amp, DIP-14 4-section package)
+*   NTE976   → TL071-type (single JFET-input high-Z op-amp)
+*   NTE824   → NE5532 (dual low-noise op-amp, DIP-8 2-section package)
+*   NTE983   → TL072  (dual JFET-input low-noise, DIP-8 2-section package)
+*   NTE458   → J201 / 2N4117 (N-ch JFET, low-noise audio)
+*   NTE457   → 2N5457  (N-ch JFET, general purpose)
+*   NTE467   → 2N5458  (N-ch JFET, general purpose switch)
+*   NTE489   → 2N5462  (P-ch JFET)
+*   VET469   → NTE469 (N-ch JFET, 35V/30mA)
+*   NTE460   → 2N5460-type (P-ch JFET, 20V)
+*   NTE326   → 2N5460-type (P-ch JFET, 40V)
+*   VET123AP → 2N3904  (NPN BJT)
+*   NTE159   → 2N3906  (PNP BJT)
+*   NTE123A  → 2N2222A (NPN BJT)
+*   NTE159M  → 2N2907A (PNP BJT)
+*   NTE47    → MPSA18  (NPN low-noise)
+*   NTE196   → TIP31C  (NPN power)
+*   NTE197   → TIP32C  (PNP power)
+*   NTE288   → MPSA93  (PNP high-voltage)
+*   2N2222   → PN2222A  (NPN BJT switching, VUPN1670 kit)
+*   2N2907   → 2N2907A  (PNP BJT switching, VUPN1670 kit)
+*   2N3904   → 2N3904   (NPN BJT general purpose, VUPN1670 kit)
+*   2N3906   → 2N3906   (PNP BJT general purpose, VUPN1670 kit)
+*   A1015    → 2SA1015  (PNP BJT low-noise, VUPN1670 kit)
+*   BC327    → BC327    (PNP BJT high-gain, VUPN1670 kit)
+*   BC337    → BC337    (NPN BJT high-gain, VUPN1670 kit)
+*   C1815    → 2SC1815  (NPN BJT low-noise, VUPN1670 kit)
+*   S8050    → S8050    (NPN BJT power switching, VUPN1670 kit)
+*   S8550    → S8550    (PNP BJT power switching, VUPN1670 kit)
+*
+* OP-AMP USAGE:
+*   Singles  (LM741N, NTE976): XAMP1 IN+ IN- V+ V- OUT <ModelName>
+*   Duals    (LM358N, NTE983, LMC6492, NTE824):
+*     XAMP1 VCC VEE INA_P INA_N OUTA INB_P INB_N OUTB <ModelName>
+*   Quads    (NTE987, LMC6482):
+*     XAMP1 VCC VEE INA_P INA_N OUTA INB_P INB_N OUTB
+*     +     INC_P INC_N OUTC IND_P IND_N OUTD <ModelName>
+*   Internal _SEC subckts keep 5-pin format: IN+ IN- V+ V- OUT
+*
+* ================================================================
+
+
+* ================================================================
+* SECTION 1: BIPOLAR JUNCTION TRANSISTORS (BJT)
+*
+* All models use standard ngspice NPN/PNP .model syntax.
+* Physical pin order (TO-92): 1=Collector  2=Base  3=Emitter
+* ================================================================
+
+* ----------------------------------------------------------------
+* VET123AP — NPN General Purpose  (2N3904 equivalent)
+*   Vceo=40V  Ic=200mA  hFE=100–300  fT=300MHz
+*   Use: Universal NPN; logic, signal switching, ladder filters.
+*   Source: Fairchild Semiconductor 2N3904 SPICE model.
+* ----------------------------------------------------------------
+.MODEL VET123AP NPN(
++ IS=6.734f   XTI=3    EG=1.11  VAF=74.03
++ BF=416.4    NE=1.259 ISE=6.734f  IKF=66.78m  XTB=1.5
++ BR=0.7371   NC=2     ISC=0    IKR=0
++ RC=1        CJC=3.638p  VJC=0.75   MJC=0.3333  FC=0.5
++ CJE=4.493p  VJE=0.75   MJE=0.3333
++ TR=239.5n   TF=301.2p  ITF=0.4  VTF=4  XTF=2  RB=10 )
+
+* ----------------------------------------------------------------
+* NTE159 — PNP General Purpose  (2N3906 equivalent)
+*   Vceo=40V  Ic=200mA  hFE=100–300  fT=250MHz
+*   Use: Universal PNP; complement to VET123AP.
+*   Source: Fairchild Semiconductor 2N3906 SPICE model.
+* ----------------------------------------------------------------
+.MODEL NTE159 PNP(
++ IS=1.41f    XTI=3    EG=1.11  VAF=18.7
++ BF=180.7    NE=1.394 ISE=0    IKF=80m     XTB=1.5
++ BR=4.977    NC=2     ISC=0    IKR=0
++ RC=2.5      CJC=9.728p  VJC=0.75   MJC=0.5776  FC=0.5
++ CJE=8.063p  VJE=0.6609 MJE=0.3677
++ TR=33.42n   TF=179.3p  ITF=0.4  VTF=4  XTF=6  RB=10 )
+
+* ----------------------------------------------------------------
+* NTE123A — NPN Medium-Power Switching  (2N2222A equivalent)
+*   Vceo=40V  Ic=800mA  hFE=100–300  fT=300MHz
+*   Use: Switching; drives lamps, relays, buzzers.
+*   Source: Fairchild Semiconductor 2N2222A SPICE model.
+* ----------------------------------------------------------------
+.MODEL NTE123A NPN(
++ IS=3.108E-14  XTI=3    EG=1.11  VAF=131.5
++ BF=217.5      NE=1.541 ISE=190.7E-15  IKF=1.296  XTB=1.5
++ BR=6.18       NC=2     ISC=0    IKR=0
++ RC=1          CJC=14.57p  VJC=0.75  MJC=0.3333  FC=0.5
++ CJE=26.08p    VJE=0.75   MJE=0.3333
++ TR=51.35n     TF=451p  ITF=0.1  VTF=10  XTF=2  RB=10 )
+
+* ----------------------------------------------------------------
+* NTE159M — PNP Switching  (2N2907A equivalent)
+*   Vceo=60V  Ic=600mA  hFE=100–300  fT=200MHz
+*   Use: Robust PNP complement; safe on any modular rail.
+*   Source: Fairchild Semiconductor 2N2907A SPICE model.
+* ----------------------------------------------------------------
+.MODEL NTE159M PNP(
++ IS=650.6E-18  XTI=3    EG=1.11  VAF=115.7
++ BF=231.7      NE=1.829 ISE=54.81E-15  IKF=1.079  XTB=1.5
++ BR=3.563      NC=2     ISC=0    IKR=0
++ RC=0.715      CJC=14.76p  VJC=0.75  MJC=0.3333  FC=0.5
++ CJE=19.82p    VJE=0.75   MJE=0.3333
++ TR=111.3n     TF=603.7p  ITF=0.65  VTF=5  XTF=1.7  RB=10 )
+
+* ----------------------------------------------------------------
+* NTE47 — NPN Low-Noise High-Gain  (MPSA18 equivalent)
+*   Vceo=30V  Ic=50mA  hFE=400–1200  fT=100MHz
+*   Use: Low-noise input stages, pre-amplification.
+*   Source: ON Semiconductor MPSA18 SPICE parameters.
+* ----------------------------------------------------------------
+.MODEL NTE47 NPN(
++ IS=2.165E-15  XTI=3    EG=1.11  VAF=200
++ BF=600        NE=1.5   ISE=100E-15   IKF=60m   XTB=1.5
++ BR=4          NC=2     ISC=0    IKR=0
++ RC=1          CJC=4p   VJC=0.75  MJC=0.3333  FC=0.5
++ CJE=12p       VJE=0.75  MJE=0.3333
++ TR=100n       TF=500p  ITF=0.1  VTF=4  XTF=2  RB=15 )
+
+* ----------------------------------------------------------------
+* NTE196 — NPN Power Transistor  (TIP31C equivalent)
+*   Vceo=100V  Ic=3A (cont.)  hFE=10–50  TO-220 package
+*   Use: Rail splitter; high-current ground sink.
+*   Source: ST Microelectronics TIP31C SPICE parameters.
+* ----------------------------------------------------------------
+.MODEL NTE196 NPN(
++ IS=3.045E-13  XTI=3    EG=1.11  VAF=100
++ BF=75         NE=1.5   ISE=203E-15   IKF=3     XTB=1.5
++ BR=4          NC=2     ISC=0    IKR=0
++ RC=0.1        CJC=168p  VJC=0.75  MJC=0.3333  FC=0.5
++ CJE=70p       VJE=0.75  MJE=0.3333
++ TR=100n       TF=5n    RB=1 )
+
+* ----------------------------------------------------------------
+* NTE197 — PNP Power Transistor  (TIP32C equivalent)
+*   Vceo=100V  Ic=3A (cont.)  hFE=10–50  TO-220 package
+*   Use: Rail splitter; high-current V+ source (complement to NTE196).
+*   Source: ST Microelectronics TIP32C SPICE parameters.
+* ----------------------------------------------------------------
+.MODEL NTE197 PNP(
++ IS=3.045E-13  XTI=3    EG=1.11  VAF=100
++ BF=75         NE=1.5   ISE=203E-15   IKF=3     XTB=1.5
++ BR=4          NC=2     ISC=0    IKR=0
++ RC=0.1        CJC=168p  VJC=0.75  MJC=0.3333  FC=0.5
++ CJE=70p       VJE=0.75  MJE=0.3333
++ TR=100n       TF=5n    RB=1 )
+
+* ----------------------------------------------------------------
+* NTE288 — PNP High-Voltage Small-Signal  (MPSA93 equivalent)
+*   Vceo=200V  Ic=500mA  hFE=25–50  fT=50MHz
+*   Use: High-voltage signal path; indestructible on ±12V rails.
+*   Source: ON Semiconductor MPSA93 datasheet (VCEO=200V, hFE=40 typ
+*           at Ic=10mA, Ccb=8pF, fT=50MHz).
+* ----------------------------------------------------------------
+.MODEL NTE288 PNP(
++ IS=4.259E-15  XTI=3    EG=1.11  VAF=100
++ BF=40         NE=1.5   ISE=100E-15   IKF=0.1   XTB=1.5
++ BR=4          NC=2     ISC=0    IKR=0
++ RC=1.2        CJC=8p   VJC=0.75  MJC=0.3333  FC=0.5
++ CJE=12p       VJE=0.75  MJE=0.3333
++ TR=50n        TF=3n    RB=10 )
+
+
+* ================================================================
+* SECTION 1b: VUPN1670 ASSORTMENT KIT — BJT MODELS
+*
+* These parts come as a "grab bag" assortment (Vetco VUPN1670).
+* Models use standard ngspice NPN/PNP .model syntax.
+* Physical pin order (TO-92): 1=Collector  2=Base  3=Emitter
+* ================================================================
+
+* ----------------------------------------------------------------
+* 2N2222 — NPN Switching  (PN2222A; classic US workhorse)
+*   Vceo=60V  Ic=800mA  hFE~200  fT=300MHz
+*   Use: Fast switching, logic gates, clocks, triggers.
+*   Source: Fairchild/onsemi PN2222A SPICE model.
+* ----------------------------------------------------------------
+.MODEL 2N2222 NPN(
++ IS=14.34f   XTI=3    EG=1.11  VAF=74.03
++ BF=255.9    NE=1.307 ISE=14.34f  IKF=0.2847  XTB=1.5
++ BR=6.092    NC=2     ISC=0    IKR=0
++ RC=1        CJC=7.306p  VJC=0.75  MJC=0.3333  FC=0.5
++ CJE=22.01p  VJE=0.75   MJE=0.3333
++ TR=46.91n   TF=411.1p  ITF=0.6  VTF=1.7  XTF=3  RB=10 )
+
+* ----------------------------------------------------------------
+* 2N2907 — PNP Switching  (2N2907A; complement to 2N2222)
+*   Vceo=60V  Ic=600mA  hFE~200  fT=200MHz
+*   Use: Symmetrical PNP complement; push-pull, analog designs.
+*   Source: Fairchild/onsemi 2N2907A SPICE model.
+* ----------------------------------------------------------------
+.MODEL 2N2907 PNP(
++ IS=650.6E-18  XTI=3    EG=1.11  VAF=115.7
++ BF=231.7      NE=1.829 ISE=54.81E-15  IKF=1.079  XTB=1.5
++ BR=3.563      NC=2     ISC=0    IKR=0
++ RC=0.715      CJC=14.76p  VJC=0.75  MJC=0.3333  FC=0.5
++ CJE=19.82p    VJE=0.75   MJE=0.3333
++ TR=111.3n     TF=603.7p  ITF=0.65  VTF=5  XTF=1.7  RB=10 )
+
+* ----------------------------------------------------------------
+* 2N3904 — NPN General Purpose  (same die as VET123AP)
+*   Vceo=40V  Ic=200mA  hFE=100–300  fT=300MHz
+*   Use: Buffers, logic, CV conditioning.
+*   Source: Fairchild Semiconductor 2N3904 SPICE model.
+* ----------------------------------------------------------------
+.MODEL 2N3904 NPN(
++ IS=6.734f   XTI=3    EG=1.11  VAF=74.03
++ BF=416.4    NE=1.259 ISE=6.734f  IKF=66.78m  XTB=1.5
++ BR=0.7371   NC=2     ISC=0    IKR=0
++ RC=1        CJC=3.638p  VJC=0.75   MJC=0.3333  FC=0.5
++ CJE=4.493p  VJE=0.75   MJE=0.3333
++ TR=239.5n   TF=301.2p  ITF=0.4  VTF=4  XTF=2  RB=10 )
+
+* ----------------------------------------------------------------
+* 2N3906 — PNP General Purpose  (same die as NTE159)
+*   Vceo=40V  Ic=200mA  hFE=100–300  fT=250MHz
+*   Use: Complement to 2N3904; low-current analog paths.
+*   Source: Fairchild Semiconductor 2N3906 SPICE model.
+* ----------------------------------------------------------------
+.MODEL 2N3906 PNP(
++ IS=1.41f    XTI=3    EG=1.11  VAF=18.7
++ BF=180.7    NE=1.394 ISE=0    IKF=80m     XTB=1.5
++ BR=4.977    NC=2     ISC=0    IKR=0
++ RC=2.5      CJC=9.728p  VJC=0.75   MJC=0.5776  FC=0.5
++ CJE=8.063p  VJE=0.6609 MJE=0.3677
++ TR=33.42n   TF=179.3p  ITF=0.4  VTF=4  XTF=6  RB=10 )
+
+* ----------------------------------------------------------------
+* A1015 — PNP Low-Noise Small-Signal  (2SA1015; Toshiba)
+*   Vceo=50V  Ic=150mA  hFE=70–700  fT=80MHz
+*   Use: Preferred audio-path PNP; CV buffering, expo pairs.
+*   Source: Derived from Toshiba 2SA1015 datasheet parameters.
+* ----------------------------------------------------------------
+.MODEL A1015 PNP(
++ IS=2.04E-15  XTI=3    EG=1.11  VAF=50
++ BF=400       NE=1.5   ISE=300E-15  IKF=0.15   XTB=1.5
++ BR=10        NC=2     ISC=0    IKR=0
++ RC=1.5       CJC=16p  VJC=0.75  MJC=0.3333  FC=0.5
++ CJE=15p      VJE=0.75  MJE=0.3333
++ TR=50n       TF=300p  ITF=0.1  VTF=4  XTF=2  RB=15 )
+
+* ----------------------------------------------------------------
+* BC327 — PNP High-Gain Small-Signal  (TO-92)
+*   Vceo=50V  Ic=800mA  hFE=100–600  fT=100MHz
+*   Use: Signal stages; moderate power drivers; complement BC337.
+*   Source: onsemi BC327 SPICE parameters.
+* ----------------------------------------------------------------
+.MODEL BC327 PNP(
++ IS=2.13E-15  XTI=3    EG=1.11  VAF=63.7
++ BF=300       NE=1.5   ISE=620E-15  IKF=0.5   XTB=1.5
++ BR=10        NC=2     ISC=0    IKR=0
++ RC=0.5       CJC=9p   VJC=0.75  MJC=0.3333  FC=0.5
++ CJE=20p      VJE=0.75  MJE=0.3333
++ TR=20n       TF=400p  ITF=0.5  VTF=4  XTF=2  RB=5 )
+
+* ----------------------------------------------------------------
+* BC337 — NPN High-Gain Small-Signal  (TO-92)
+*   Vceo=50V  Ic=800mA  hFE=100–600  fT=100MHz
+*   Use: Signal or switching; complement to BC327.
+*   Source: onsemi BC337 SPICE parameters.
+* ----------------------------------------------------------------
+.MODEL BC337 NPN(
++ IS=2.13E-15  XTI=3    EG=1.11  VAF=63.7
++ BF=300       NE=1.5   ISE=620E-15  IKF=0.5   XTB=1.5
++ BR=10        NC=2     ISC=0    IKR=0
++ RC=0.5       CJC=9p   VJC=0.75  MJC=0.3333  FC=0.5
++ CJE=20p      VJE=0.75  MJE=0.3333
++ TR=20n       TF=400p  ITF=0.5  VTF=4  XTF=2  RB=5 )
+
+* ----------------------------------------------------------------
+* C1815 — NPN Low-Noise Small-Signal  (2SC1815; Toshiba)
+*   Vceo=60V  Ic=150mA  hFE=70–700  fT=80MHz
+*   Use: Expo converters, VCAs, preamps; prime audio-path NPN.
+*   Source: Derived from Toshiba 2SC1815 datasheet parameters.
+* ----------------------------------------------------------------
+.MODEL C1815 NPN(
++ IS=2.04E-15  XTI=3    EG=1.11  VAF=80
++ BF=400       NE=1.5   ISE=300E-15  IKF=0.15   XTB=1.5
++ BR=10        NC=2     ISC=0    IKR=0
++ RC=1         CJC=6p   VJC=0.75  MJC=0.3333  FC=0.5
++ CJE=15p      VJE=0.75  MJE=0.3333
++ TR=50n       TF=200p  ITF=0.1  VTF=4  XTF=2  RB=10 )
+
+* ----------------------------------------------------------------
+* S8050 — NPN Power Switching  (TO-92, 25V/1.5A)
+*   Vceo=25V  Vcbo=40V  Ic=1.5A  hFE=85–300
+*   Use: LED drivers, gate logic, utility power loads.
+*   Source: onsemi SS8050 official SPICE model.
+* ----------------------------------------------------------------
+.MODEL S8050 NPN(
++ IS=3.772E-13  XTI=1    EG=1.05  VAF=32.09
++ BF=218        NE=2.128 ISE=51.72E-12  IKF=0.845  XTB=0.627
++ BR=5.458      NC=2     ISC=0    IKR=0
++ RC=0.248      CJC=26p  VJC=0.4   MJC=0.368   FC=0.5
++ CJE=27.3p     VJE=0.721 MJE=0.85
++ TR=100n       TF=644p  ITF=1.201 VTF=0.345  XTF=1.432  RB=5.747 )
+
+* ----------------------------------------------------------------
+* S8550 — PNP Power Switching  (TO-92, 25V/1.5A)
+*   Vceo=25V  Vcbo=40V  Ic=1.5A  hFE=85–300
+*   Use: Push-pull output stages; complement to S8050.
+*   Source: onsemi SS8550 official SPICE model.
+* ----------------------------------------------------------------
+.MODEL S8550 PNP(
++ IS=1.176E-13  XTI=3    EG=1.170  VAF=51.25
++ BF=178        NE=1.5   ISE=18.82E-15  IKF=3.303  XTB=1.673
++ BR=5          NC=1.5   ISC=0    IKR=0
++ RC=1          CJC=33.3p  VJC=0.651  MJC=0.389  FC=0.5
++ CJE=99.5p     VJE=0.778  MJE=0.380
++ TR=0          TF=796p  RB=122 )
+
+
+* ================================================================
+* SECTION 2: JUNCTION FIELD-EFFECT TRANSISTORS (JFET)
+*
+* All models use standard ngspice NJF/PJF .model syntax.
+* Physical pin order (TO-92): 1=Drain  2=Gate  3=Source
+* ================================================================
+
+* ----------------------------------------------------------------
+* NTE457 — N-Channel JFET General Purpose  (2N5457 equivalent)
+*   VGS(off)=-6V max  IDSS=1–5mA  VDS=25V  fT=100MHz
+*   Use: CV control; VCRs in filters; simple VCAs.
+*   Source: Central Semiconductor 2N5457 SPICE model.
+* ----------------------------------------------------------------
+.MODEL NTE457 NJF(
++ VTO=-1.4676  BETA=1.6275m  LAMBDA=0.883m
++ RD=1         RS=1
++ CGS=4.5p     CGD=1.5p
++ PB=1         FC=0.5       IS=35.7p
++ KF=9.9E-18   AF=1 )
+
+* ----------------------------------------------------------------
+* NTE458 — N-Channel JFET Low-Noise Audio  (J201 / 2N4117 equiv.)
+*   VGS(off)=-0.3 to -1.5V  IDSS=0.2–1mA  VDS=50V
+*   Use: Low-noise audio input stages; primary audio path.
+*   Source: InterFET J201 SPICE model parameters.
+* ----------------------------------------------------------------
+.MODEL NTE458 NJF(
++ VTO=-0.80    BETA=1.0m    LAMBDA=10m
++ RD=50        RS=50
++ CGS=25p      CGD=5p
++ PB=0.5       FC=0.5       IS=1E-14
++ KF=1E-18     AF=1 )
+
+* ----------------------------------------------------------------
+* NTE467 — N-Channel JFET Switching  (2N5458 equivalent)
+*   VGS(off)=-7V max  IDSS=2–9mA  VDS=30V
+*   Use: S&H circuits; analog switches (low Rds(on)).
+*   Source: Published 2N5458 SPICE model.
+* ----------------------------------------------------------------
+.MODEL NTE467 NJF(
++ VTO=-2.882   BETA=0.489m  LAMBDA=3.167m
++ RD=1         RS=1
++ CGS=4.627p   CGD=4p
++ PB=1         FC=0.5       IS=181.3E-15
++ KF=9.9E-18   AF=1 )
+
+* ----------------------------------------------------------------
+* NTE489 — P-Channel JFET  (2N5462 equivalent)
+*   VGS(off)=+3 to +7.5V  IDSS=4–16mA  VDS=30V  Ic=50mA
+*   Use: Complementary P-channel; push-pull output stages.
+*   Source: Vishay Siliconix 2N5462 SPICE parameters.
+* ----------------------------------------------------------------
+.MODEL NTE489 PJF(
++ VTO=3.50     BETA=0.65m   LAMBDA=5m
++ RD=1         RS=1
++ CGS=5p       CGD=2p
++ PB=1         FC=0.5       IS=35.7p )
+
+* ----------------------------------------------------------------
+* VET469 — N-Channel JFET High-Current  (NTE469)
+*   VGS(off)=-0.5 to -4V  IDSS(max)=30mA (NTE469)  VDS=35V
+*   Use: Driving heavier loads; "chopper" circuits.
+*   Source: NTE469 datasheet (equivalent: PN4393, BSJ113, J113);
+*           BETA scaled for IDSS=30mA at VGS=0 (BETA = IDSS / VTO^2 = 30m/4 = 7.5m).
+* ----------------------------------------------------------------
+.MODEL VET469 NJF(
++ VTO=-2.00    BETA=7.5m    LAMBDA=8m
++ RD=20        RS=20
++ CGS=4p       CGD=2p
++ PB=1         FC=0.5       IS=1E-14 )
+
+* ----------------------------------------------------------------
+* NTE460 — P-Channel JFET  (2N5460-type, 20V variant)
+*   VGS(off)=+0.75 to +6V  IDSS=1–5mA  VDS=20V
+*   Use: Low-voltage sub-sections (0–10V); caution on ±12V rails.
+*   Source: 2N5460 parameters de-rated to 20V operation.
+* ----------------------------------------------------------------
+.MODEL NTE460 PJF(
++ VTO=2.50     BETA=0.5m    LAMBDA=5m
++ RD=1         RS=1
++ CGS=4p       CGD=1.5p
++ PB=0.75      FC=0.5       IS=35.7p )
+
+* ----------------------------------------------------------------
+* NTE326 — P-Channel JFET High-Voltage  (2N5460-type, 40V)
+*   VGS(off)=+0.75 to +9V  IDSS=1–5mA  VDS=40V
+*   Use: Full Eurorack rail swing; safe for 24V differential.
+*   Source: 2N5460 parameters calibrated for full 40V operation.
+* ----------------------------------------------------------------
+.MODEL NTE326 PJF(
++ VTO=3.50     BETA=0.25m   LAMBDA=4m
++ RD=1         RS=1
++ CGS=4p       CGD=1.5p
++ PB=1         FC=0.5       IS=35.7p )
+
+
+* ================================================================
+* SECTION 3: OPERATIONAL AMPLIFIERS
+*
+* Single-section parts (LM741N, NTE976) have 5-pin subcircuits:
+*   Pin 1 = Non-Inverting Input  (IN+)
+*   Pin 2 = Inverting Input      (IN-)
+*   Pin 3 = Positive Supply      (V+)
+*   Pin 4 = Negative Supply      (V-)
+*   Pin 5 = Output               (OUT)
+*
+* Multi-section parts (dual/quad) expose a package-level wrapper
+* with named pins (VCC VEE INA_P INA_N OUTA ...) that internally
+* instantiate <Name>_SEC cores sharing the supply rails.
+*
+* Boyle-type macro models (IEEE J. Solid-State Circuits, 1974).
+* GBW is set by GA / (2*pi*C2); slew rate by IEE / C2.
+* VLP/VLN set the maximum output excursion from the rails.
+*
+* ================================================================
+
+* ----------------------------------------------------------------
+* LM741N — Single Op-Amp  (Texas Instruments / National Semi.)
+*   Avol≈106dB  GBW=1MHz  SR=0.5V/µs  Rails=±18V  Iout=25mA
+*   Use: Vintage/lo-fi oscillators; distortion circuits.
+*   Source: Classic Boyle macro model; TI data sheet parameters.
+* ----------------------------------------------------------------
+.SUBCKT LM741N 1 2 3 4 5
+*               IN+ IN- V+ V- OUT
+*
+C1   11 12 8.661E-12
+C2    6  7 30.00E-12
+DC    5 53 DX
+DE   54  5 DX
+DLP  90 91 DX
+DLN  92 90 DX
+DP    4  3 DX
+EGND 99  0 VALUE = {0.5*V(3) + 0.5*V(4)}
+FB1   7 99 VB  21.22E6
+FB2   7 99 VC -20E6
+FB3   7 99 VE  20E6
+FB4   7 99 VLP 20E6
+FB5   7 99 VLN -20E6
+GA    6  0 11 12 188.5E-6
+GCM   0  6 10 99 5.961E-9
+IEE  10  4 DC 15.16E-6
+HLIM 90  0 VLIM 1K
+Q1   11  2 13 QX
+Q2   12  1 14 QX
+R2    6  9 100.0E3
+RC1   3 11 5.305E3
+RC2   3 12 5.305E3
+RE1  13 10 1.836E3
+RE2  14 10 1.836E3
+REE  10 99 13.19E6
+RO1   8  5 50
+RO2   7 99 25
+RP    3  4 18.16E3
+VB    9  0 DC 0
+VC    3 53 DC 1
+VE   54  4 DC 1
+VLIM  7  8 DC 0
+VLP  91  0 DC 40
+VLN   0 92 DC 40
+.MODEL DX D(IS=800.0E-18 RS=1)
+.MODEL QX NPN(IS=800.0E-18 BF=93.75)
+.ENDS LM741N
+
+* ----------------------------------------------------------------
+* LM358N — Dual Op-Amp  (Texas Instruments)  DIP-8, 2 sections
+*   Avol≈100dB  GBW≈700kHz  SR=0.3V/µs  Rails=±16V or 3–32V single
+*   Use: CV utility; LFOs, envelopes, comparators, logic.
+*   Source: Boyle macro model with LM358 input-stage parameters.
+*   NOTE: PNP-equivalent input stage allows CM input to V- rail.
+*         Output swings to within ~20mV of V-.
+* ----------------------------------------------------------------
+.SUBCKT LM358N_SEC 1 2 3 4 5
+*                   IN+ IN- V+ V- OUT
+*
+C1   11 12 3.498E-12
+C2    6  7 30.00E-12
+DC    5 53 DX
+DE   54  5 DX
+DLP  90 91 DX
+DLN  92 90 DX
+DP    4  3 DX
+EGND 99  0 VALUE = {0.5*V(3) + 0.5*V(4)}
+FB1   7 99 VB  15.91E6
+FB2   7 99 VC -20E6
+FB3   7 99 VE  20E6
+FB4   7 99 VLP 20E6
+FB5   7 99 VLN -20E6
+GA    6  0 11 12 125.7E-6
+GCM   0  6 10 99 7.067E-9
+IEE   3 10 DC 10.04E-6
+HLIM 90  0 VLIM 1K
+Q1   11  2 13 QX
+Q2   12  1 14 QX
+R2    6  9 100.0E3
+RC1   3 11 7.957E3
+RC2   3 12 7.957E3
+RE1  13 10 2.773E3
+RE2  14 10 2.773E3
+REE  10 99 19.92E6
+RO1   8  5 50
+RO2   7 99 25
+RP    3  4 30.31E3
+VB    9  0 DC 0
+VC    3 53 DC 2.1
+VE   54  4 DC 0.2
+VLIM  7  8 DC 0
+VLP  91  0 DC 40
+VLN   0 92 DC 40
+.MODEL DX D(IS=800.0E-18 RS=1)
+.MODEL QX NPN(IS=800.0E-18 BF=62.50)
+.ENDS LM358N_SEC
+
+* LM358N package wrapper — dual, shared VCC/VEE
+.SUBCKT LM358N VCC VEE INA_P INA_N OUTA INB_P INB_N OUTB
+XA INA_P INA_N VCC VEE OUTA LM358N_SEC
+XB INB_P INB_N VCC VEE OUTB LM358N_SEC
+.ENDS LM358N
+
+* ----------------------------------------------------------------
+* NTE987 — Quad Low-Power Op-Amp  (LM324 equiv.)  DIP-14, 4 sections
+*   Avol≈100dB  GBW=1MHz  SR=0.5V/µs  Rails=±16V or 3–32V single
+*   Use: Dense CV processors; mixers, attenuverters (4 sections/chip).
+*   Source: Boyle macro model with LM324 input-stage parameters.
+* ----------------------------------------------------------------
+.SUBCKT NTE987_SEC 1 2 3 4 5
+*                   IN+ IN- V+ V- OUT
+*
+C1   11 12 5.544E-12
+C2    6  7 30.00E-12
+DC    5 53 DX
+DE   54  5 DX
+DLP  90 91 DX
+DLN  92 90 DX
+DP    4  3 DX
+EGND 99  0 VALUE = {0.5*V(3) + 0.5*V(4)}
+FB1   7 99 VB  10.61E6
+FB2   7 99 VC -20E6
+FB3   7 99 VE  20E6
+FB4   7 99 VLP 20E6
+FB5   7 99 VLN -20E6
+GA    6  0 11 12 188.5E-6
+GCM   0  6 10 99 7.067E-9
+IEE   3 10 DC 15.00E-6
+HLIM 90  0 VLIM 1K
+Q1   11  2 13 QX
+Q2   12  1 14 QX
+R2    6  9 100.0E3
+RC1   3 11 5.305E3
+RC2   3 12 5.305E3
+RE1  13 10 1.836E3
+RE2  14 10 1.836E3
+REE  10 99 13.19E6
+RO1   8  5 50
+RO2   7 99 25
+RP    3  4 20.00E3
+VB    9  0 DC 0
+VC    3 53 DC 2.0
+VE   54  4 DC 0.2
+VLIM  7  8 DC 0
+VLP  91  0 DC 40
+VLN   0 92 DC 40
+.MODEL DX D(IS=800.0E-18 RS=1)
+.MODEL QX NPN(IS=800.0E-18 BF=62.50)
+.ENDS NTE987_SEC
+
+* NTE987 package wrapper — quad, shared VCC/VEE
+.SUBCKT NTE987 VCC VEE INA_P INA_N OUTA INB_P INB_N OUTB INC_P INC_N OUTC IND_P IND_N OUTD
+XA INA_P INA_N VCC VEE OUTA NTE987_SEC
+XB INB_P INB_N VCC VEE OUTB NTE987_SEC
+XC INC_P INC_N VCC VEE OUTC NTE987_SEC
+XD IND_P IND_N VCC VEE OUTD NTE987_SEC
+.ENDS NTE987
+
+* ----------------------------------------------------------------
+* NTE976— Single High-Impedance Op-Amp  (TL071 / LF351 type)
+*   Avol≈106dB  GBW=4MHz  SR=13V/µs  Rin≈10^12Ω  Rails=±18V
+*   Use: Sample & Hold buffers; anything needing ultra-high-Z input.
+*   Source: Boyle macro model with JFET input stage (TL071 params).
+* ----------------------------------------------------------------
+.SUBCKT NTE976 1 2 3 4 5
+*               IN+ IN- V+ V- OUT
+*
+C1   11 12 3.498E-12
+C2    6  7 10.00E-12
+DC    5 53 DX
+DE   54  5 DX
+DLP  90 91 DX
+DLN  92 90 DX
+DP    4  3 DX
+EGND 99  0 VALUE = {0.5*V(3) + 0.5*V(4)}
+FB1   7 99 VB  21.22E6
+FB2   7 99 VC -40E6
+FB3   7 99 VE  40E6
+FB4   7 99 VLP 40E6
+FB5   7 99 VLN -40E6
+GA    6  0 11 12 250.0E-6
+GCM   0  6 10 99 1.0E-9
+IEE  10  4 DC 100.0E-6
+HLIM 90  0 VLIM 1K
+J1   11  2 13 JX
+J2   12  1 14 JX
+R2    6  9 100.0E3
+RD1   3 11 5.305E3
+RD2   3 12 5.305E3
+RS1  13 10 2.273E3
+RS2  14 10 2.273E3
+RSS  10 99 5.0E6
+RO1   8  5 50
+RO2   7 99 25
+RP    3  4 18.0E3
+VB    9  0 DC 0
+VC    3 53 DC 1.5
+VE   54  4 DC 1.5
+VLIM  7  8 DC 0
+VLP  91  0 DC 40
+VLN   0 92 DC 40
+.MODEL DX D(IS=800.0E-18 RS=1)
+.MODEL JX NJF(IS=12.50E-12 BETA=250E-6 VTO=-1)
+.ENDS NTE976
+
+* ----------------------------------------------------------------
+* LMC6482 — CMOS Rail-to-Rail Quad Op-Amp  (TI)  DIP-14, 4 sections
+*   Avol≈84dB  GBW=1.5MHz  SR=2.7V/µs  Rin≈1TΩ  V+=2.7–16V
+*
+*   *** WARNING: NOT SUITABLE for standard ±12V Eurorack rails. ***
+*   *** Maximum supply is ±8V (16V total).                       ***
+*   *** Use only in 0–10V or low-voltage sub-sections.           ***
+*
+*   Source: Behavioral Boyle model; CMOS JFET-input stage; tight
+*           output clamps (VC=VE=50mV) for rail-to-rail swing.
+* ----------------------------------------------------------------
+.SUBCKT LMC6482_SEC 1 2 3 4 5
+*                    IN+ IN- V+ V- OUT
+*
+C1   11 12 2.0E-12
+C2    6  7 21.2E-12
+DC    5 53 DX
+DE   54  5 DX
+DLP  90 91 DX
+DLN  92 90 DX
+DP    4  3 DX
+EGND 99  0 VALUE = {0.5*V(3) + 0.5*V(4)}
+FB1   7 99 VB  1.681E6
+FB2   7 99 VC -20E6
+FB3   7 99 VE  20E6
+FB4   7 99 VLP 20E6
+FB5   7 99 VLN -20E6
+GA    6  0 11 12 200.0E-6
+GCM   0  6 10 99 1.0E-12
+IEE  10  4 DC 100.0E-6
+HLIM 90  0 VLIM 1K
+J1   11  2 13 JX
+J2   12  1 14 JX
+R2    6  9 100.0E3
+RD1   3 11 5.0E3
+RD2   3 12 5.0E3
+RS1  13 10 2.0E3
+RS2  14 10 2.0E3
+RSS  10 99 5.0E6
+RO1   8  5 75
+RO2   7 99 25
+RP    3  4 30.0E3
+VB    9  0 DC 0
+VC    3 53 DC 0.05
+VE   54  4 DC 0.05
+VLIM  7  8 DC 0
+VLP  91  0 DC 20
+VLN   0 92 DC 20
+.MODEL DX D(IS=800.0E-18 RS=1)
+.MODEL JX NJF(IS=12.50E-12 BETA=500E-6 VTO=-0.5)
+.ENDS LMC6482_SEC
+
+* LMC6482 package wrapper — quad, shared VCC/VEE
+.SUBCKT LMC6482 VCC VEE INA_P INA_N OUTA INB_P INB_N OUTB INC_P INC_N OUTC IND_P IND_N OUTD
+XA INA_P INA_N VCC VEE OUTA LMC6482_SEC
+XB INB_P INB_N VCC VEE OUTB LMC6482_SEC
+XC INC_P INC_N VCC VEE OUTC LMC6482_SEC
+XD IND_P IND_N VCC VEE OUTD LMC6482_SEC
+.ENDS LMC6482
+
+* ----------------------------------------------------------------
+* LMC6492 — CMOS Rail-to-Rail Dual Op-Amp  (TI)  DIP-8, 2 sections
+*   Avol≈84dB  GBW=1.5MHz  SR=2.7V/µs  Rin≈1TΩ  V+=2.7–16V
+*
+*   *** WARNING: NOT SUITABLE for standard ±12V Eurorack rails. ***
+*   *** Maximum supply is ±8V (16V total).                       ***
+*   *** Use only in 0–10V or low-voltage sub-sections.           ***
+*
+*   Source: Same silicon family as LMC6482; identical macro model.
+* ----------------------------------------------------------------
+.SUBCKT LMC6492_SEC 1 2 3 4 5
+*                    IN+ IN- V+ V- OUT
+*
+C1   11 12 2.0E-12
+C2    6  7 21.2E-12
+DC    5 53 DX
+DE   54  5 DX
+DLP  90 91 DX
+DLN  92 90 DX
+DP    4  3 DX
+EGND 99  0 VALUE = {0.5*V(3) + 0.5*V(4)}
+FB1   7 99 VB  1.681E6
+FB2   7 99 VC -20E6
+FB3   7 99 VE  20E6
+FB4   7 99 VLP 20E6
+FB5   7 99 VLN -20E6
+GA    6  0 11 12 200.0E-6
+GCM   0  6 10 99 1.0E-12
+IEE  10  4 DC 100.0E-6
+HLIM 90  0 VLIM 1K
+J1   11  2 13 JX
+J2   12  1 14 JX
+R2    6  9 100.0E3
+RD1   3 11 5.0E3
+RD2   3 12 5.0E3
+RS1  13 10 2.0E3
+RS2  14 10 2.0E3
+RSS  10 99 5.0E6
+RO1   8  5 75
+RO2   7 99 25
+RP    3  4 30.0E3
+VB    9  0 DC 0
+VC    3 53 DC 0.05
+VE   54  4 DC 0.05
+VLIM  7  8 DC 0
+VLP  91  0 DC 20
+VLN   0 92 DC 20
+.MODEL DX D(IS=800.0E-18 RS=1)
+.MODEL JX NJF(IS=12.50E-12 BETA=500E-6 VTO=-0.5)
+.ENDS LMC6492_SEC
+
+* LMC6492 package wrapper — dual, shared VCC/VEE
+.SUBCKT LMC6492 VCC VEE INA_P INA_N OUTA INB_P INB_N OUTB
+XA INA_P INA_N VCC VEE OUTA LMC6492_SEC
+XB INB_P INB_N VCC VEE OUTB LMC6492_SEC
+.ENDS LMC6492
+
+
+* ================================================================
+* SECTION 4: AUDIO AMPLIFIERS & PREAMPS
+* ================================================================
+
+* ----------------------------------------------------------------
+* LM386 — Low-Voltage Audio Power Amplifier  (Texas Instruments)
+*   Supply: 4–12V single-supply   Internal gain = 20x (pins 1,8 open)
+*   Output: ~250mW into 8Ω        Output biased at VCC/2
+*   Use: Lo-fi headphone output; "accursed" distortion/overdrive.
+*
+*   Pin mapping for this subcircuit:
+*     1=IN+   2=IN-   3=V+   4=GND(V-)   5=OUT
+*
+*   To increase gain (up to 200x): connect a resistor and cap
+*   from pin 1 to pin 8 externally (not modeled here; adjust
+*   the EAMP polynomial coefficient manually if needed).
+*
+*   Source: Simplified behavioral subcircuit capturing key
+*           characteristics: 50kΩ Rin, gain=20, VCC/2 bias,
+*           ~100Ω Rout, output clamped to within 0.4V of rails.
+* ----------------------------------------------------------------
+.SUBCKT LM386 1 2 3 4 5
+*              IN+ IN- V+ GND OUT
+*
+* 50 kΩ differential input impedance
+RIN   1 2 50K
+*
+* VCC/2 bias network for output DC level (10kΩ:10kΩ divider)
+RMID1 3 10 10K
+RMID2 10 4 10K
+CMID  10 4 100U
+*
+* VALUE: Vout_pre = 1*V(mid) + 20*(V(IN+) - V(IN-))
+EAMP 20 0 VALUE = {V(10) + 20*(V(1) - V(2))}
+*
+* Output resistance (~100 Ω)
+ROUT 20 5 100
+*
+* Output clamp: within 0.4V of supply rails
+VCLPH 3 96 DC 0.4
+VCLPL 97 4 DC 0.4
+DCLPH 5 96 DCLAMP
+DCLPL 97 5 DCLAMP
+.MODEL DCLAMP D(IS=1E-14 RS=0.1)
+.ENDS LM386
+
+* ----------------------------------------------------------------
+* NTE824 — Dual Low-Noise Op-Amp Preamp  (NE5532 equivalent)  DIP-8
+*   Avol≈100dB  GBW=10MHz  SR=9V/µs  En=5nV/√Hz  Rails=±18V
+*   Use: High-gain preamp; bringing instruments up to modular levels.
+*   Source: Boyle macro model scaled to NE5532 per-section parameters.
+*           GA/C2 set for 10MHz GBW; elevated IEE for high SR.
+* ----------------------------------------------------------------
+.SUBCKT NTE824_SEC 1 2 3 4 5
+*                   IN+ IN- V+ V- OUT
+*
+C1   11 12 8.0E-12
+C2    6  7 9.0E-12
+DC    5 53 DX
+DE   54  5 DX
+DLP  90 91 DX
+DLN  92 90 DX
+DP    4  3 DX
+EGND 99  0 VALUE = {0.5*V(3) + 0.5*V(4)}
+FB1   7 99 VB  45.81E6
+FB2   7 99 VC -40E6
+FB3   7 99 VE  40E6
+FB4   7 99 VLP 40E6
+FB5   7 99 VLN -40E6
+GA    6  0 11 12 565.8E-6
+GCM   0  6 10 99 5.961E-9
+IEE  10  4 DC 40.0E-6
+HLIM 90  0 VLIM 1K
+Q1   11  2 13 QX
+Q2   12  1 14 QX
+R2    6  9 100.0E3
+RC1   3 11 2.000E3
+RC2   3 12 2.000E3
+RE1  13 10 680
+RE2  14 10 680
+REE  10 99 12.5E6
+RO1   8  5 40
+RO2   7 99 0.3
+RP    3  4 7.843E3
+VB    9  0 DC 0
+VC    3 53 DC 2
+VE   54  4 DC 2
+VLIM  7  8 DC 0
+VLP  91  0 DC 40
+VLN   0 92 DC 40
+.MODEL DX D(IS=800.0E-18 RS=1)
+.MODEL QX NPN(IS=800.0E-18 BF=250)
+.ENDS NTE824_SEC
+
+* NTE824 package wrapper — dual, shared VCC/VEE
+.SUBCKT NTE824 VCC VEE INA_P INA_N OUTA INB_P INB_N OUTB
+XA INA_P INA_N VCC VEE OUTA NTE824_SEC
+XB INB_P INB_N VCC VEE OUTB NTE824_SEC
+.ENDS NTE824
+
+* ----------------------------------------------------------------
+* NTE983 — Dual Low-Noise Preamp  (TL072 equiv.)  DIP-8, 2 sections
+*   Avol≈106dB  GBW=3MHz  SR=13V/µs  Rin≈10^12Ω  Rails=±18V
+*   Use: Low-noise interface for guitars or microphones.
+*   Source: Boyle macro model with JFET input stage (TL072 params).
+*           GA/C2 set for 3MHz GBW; JFET pair for high-Z input.
+* ----------------------------------------------------------------
+.SUBCKT NTE983_SEC 1 2 3 4 5
+*                   IN+ IN- V+ V- OUT
+*
+C1   11 12 3.498E-12
+C2    6  7 10.00E-12
+DC    5 53 DX
+DE   54  5 DX
+DLP  90 91 DX
+DLN  92 90 DX
+DP    4  3 DX
+EGND 99  0 VALUE = {0.5*V(3) + 0.5*V(4)}
+FB1   7 99 VB  21.22E6
+FB2   7 99 VC -40E6
+FB3   7 99 VE  40E6
+FB4   7 99 VLP 40E6
+FB5   7 99 VLN -40E6
+GA    6  0 11 12 188.5E-6
+GCM   0  6 10 99 1.0E-9
+IEE  10  4 DC 200.0E-6
+HLIM 90  0 VLIM 1K
+J1   11  2 13 JX
+J2   12  1 14 JX
+R2    6  9 100.0E3
+RD1   3 11 5.305E3
+RD2   3 12 5.305E3
+RS1  13 10 2.273E3
+RS2  14 10 2.273E3
+RSS  10 99 2.5E6
+RO1   8  5 50
+RO2   7 99 25
+RP    3  4 18.0E3
+VB    9  0 DC 0
+VC    3 53 DC 1.5
+VE   54  4 DC 1.5
+VLIM  7  8 DC 0
+VLP  91  0 DC 40
+VLN   0 92 DC 40
+.MODEL DX D(IS=800.0E-18 RS=1)
+.MODEL JX NJF(IS=12.50E-12 BETA=250E-6 VTO=-1)
+.ENDS NTE983_SEC
+
+* NTE983 package wrapper — dual, shared VCC/VEE
+.SUBCKT NTE983 VCC VEE INA_P INA_N OUTA INB_P INB_N OUTB
+XA INA_P INA_N VCC VEE OUTA NTE983_SEC
+XB INB_P INB_N VCC VEE OUTB NTE983_SEC
+.ENDS NTE983
+
+
+* ================================================================
+* END OF VETCO EURORACK LIBRARY
+* ================================================================
+*
+* QUICK REFERENCE — GBW and Slew Rate summary:
+*
+*   Part      GBW       SR       Notes
+*   --------- --------- -------- ---------------------------------
+*   LM741N    1 MHz     0.5V/µs  BJT input, ±18V capable
+*   LM358N    700 kHz   0.3V/µs  Single-supply, CM to V-
+*   NTE987    1 MHz     0.5V/µs  Quad (LM324), single-supply
+*   NTE976    4 MHz     13V/µs   JFET input, high-Z
+*   LMC6482   1.5 MHz   2.7V/µs  CMOS R2R — NOT for ±12V rails!
+*   LMC6492   1.5 MHz   2.7V/µs  CMOS R2R — NOT for ±12V rails!
+*   NTE824    10 MHz    9V/µs    Low-noise dual (NE5532), audio path
+*   NTE983    3 MHz     13V/µs   JFET input, dual (TL072)
+*   LM386     300 kHz   —        Audio power amp, single-supply
+*
+* ================================================================

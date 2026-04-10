@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vetco Eurorack — Datasheet Links</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+      background: #f8f9fa;
+      color: #212529;
+    }
+    h1 { font-size: 1.6rem; margin-bottom: 0.25rem; }
+    .subtitle { color: #6c757d; font-size: 0.9rem; margin-bottom: 2rem; }
+    h2 {
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #495057;
+      border-bottom: 2px solid #dee2e6;
+      padding-bottom: 0.3rem;
+      margin-top: 2rem;
+    }
+    table { width: 100%; border-collapse: collapse; margin-top: 0.75rem; }
+    th {
+      text-align: left;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #6c757d;
+      padding: 0.4rem 0.6rem;
+      border-bottom: 1px solid #dee2e6;
+      background: #f1f3f5;
+    }
+    td { padding: 0.5rem 0.6rem; border-bottom: 1px solid #e9ecef; font-size: 0.92rem; vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #f1f3f5; }
+    code { font-family: "SFMono-Regular", Consolas, monospace; font-size: 0.88em; background: #e9ecef; padding: 0.1em 0.35em; border-radius: 3px; }
+    .equiv { color: #6c757d; font-size: 0.85em; }
+    a { color: #0d6efd; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .warn { color: #dc3545; font-size: 0.8em; font-weight: 600; }
+    .vendor-badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      padding: 0.1em 0.45em;
+      border-radius: 3px;
+      margin-left: 0.35em;
+      background: #d0e8ff;
+      color: #084298;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Vetco Eurorack — Datasheet Links</h1>
+<p class="subtitle">Source: <code>vetco_eurorack.lib</code> — datasheet links for every modeled component.</p>
+
+<!-- ============================================================ -->
+<h2>Section 1 — Bipolar Junction Transistors (BJT)</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Library Part</th>
+      <th>Equivalent</th>
+      <th>Description</th>
+      <th>Datasheet</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>VET123AP</code></td>
+      <td><span class="equiv">2N3904</span></td>
+      <td>NPN general purpose — Vceo 40 V, Ic 200 mA, hFE 100–300, fT 300 MHz</td>
+      <td>
+        <a href="https://www.onsemi.com/pdf/datasheet/2n3904-d.pdf" target="_blank" rel="noopener">2N3904 Datasheet</a>
+        <span class="vendor-badge">onsemi</span>
+      </td>
+    </tr>
+    <tr>
+      <td><code>NTE159</code></td>
+      <td><span class="equiv">2N3906</span></td>
+      <td>PNP general purpose — Vceo 40 V, Ic 200 mA, hFE 100–300, fT 250 MHz</td>
+      <td>
+        <a href="https://www.onsemi.com/pdf/datasheet/2n3906-d.pdf" target="_blank" rel="noopener">2N3906 Datasheet</a>
+        <span class="vendor-badge">onsemi</span>
+      </td>
+    </tr>
+    <tr>
+      <td><code>NTE123A</code></td>
+      <td><span class="equiv">2N2222A</span></td>
+      <td>NPN medium-power switching — Vceo 40 V, Ic 800 mA, hFE 100–300</td>
+      <td>
+        <a href="https://www.onsemi.com/pdf/datasheet/p2n2222a-d.pdf" target="_blank" rel="noopener">2N2222A Datasheet</a>
+        <span class="vendor-badge">onsemi</span>
+      </td>
+    </tr>
+    <tr>
+      <td><code>NTE159M</code></td>
+      <td><span class="equiv">2N2907A</span></td>
+      <td>PNP switching — Vceo 60 V, Ic 600 mA, hFE 100–300, fT 200 MHz</td>
+      <td>
+        <a href="https://www.onsemi.com/download/data-sheet/pdf/2n2907a-d.pdf" target="_blank" rel="noopener">2N2907A Datasheet</a>
+        <span class="warn"> **no datasheet**</span>
+        <span class="vendor-badge">onsemi</span>
+      </td>
+    </tr>
+    <tr>
+      <td><code>NTE47</code></td>
+      <td><span class="equiv">MPSA18</span></td>
+      <td>NPN low-noise high-gain — Vceo 30 V, Ic 50 mA, hFE 400–1200</td>
+      <td>
+        <a href="https://www.onsemi.com/pdf/datasheet/mpsa18-d.pdf" target="_blank" rel="noopener">MPSA18 Datasheet</a>
+        <span class="vendor-badge">onsemi</span>
+      </td>
+    </tr>
+    <tr>
+      <td><code>NTE196</code></td>
+      <td><span class="equiv">TIP31C</span></td>
+      <td>NPN power transistor — Vceo 100 V, Ic 3 A, TO-220</td>
+      <td>
+        <a href="https://www.st.com/resource/en/datasheet/tip31c.pdf" target="_blank" rel="noopener">TIP31C Datasheet</a>
+        <span class="vendor-badge">ST</span>
+      </td>
+    </tr>
+    <tr>
+      <td><code>NTE197</code></td>
+      <td><span class="equiv">TIP32C</span></td>
+      <td>PNP power transistor — Vceo 100 V, Ic 3 A, TO-220</td>
+      <td>
+        <a href="https://www.st.com/resource/en/datasheet/tip32c.pdf" target="_blank" rel="noopener">TIP32C Datasheet</a>
+        <span class="vendor-badge">ST</span>
+      </td>
+    </tr>
+    <tr>
+      <td><code>NTE288</code></td>
+      <td><span class="equiv">MPSA93</span></td>
+      <td>PNP high-voltage small-signal — Vceo 80 V, Ic 500 mA, hFE 100–300</td>
+      <td>
+        <a href="https://www.onsemi.com/download/data-sheet/pdf/mpsa93-d.pdf" target="_blank" rel="noopener">MPSA93 Datasheet</a>
+        <span class="warn"> **no datasheet**</span>
+        <span class="vendor-badge">onsemi</span>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4" style="background:#f1f3f5; color:#495057; font-size:0.78rem; font-weight:600; letter-spacing:0.05em; text-transform:uppercase; padding:0.4rem 0.6rem;">VUPN1670 Assortment Kit</td>
+    </tr>
+    <tr>
+      <td><code>2N2222 / PN2222A</code></td>
+      <td><span class="equiv">—</span></td>
+      <td>NPN switching workhorse — Vceo 60 V, Ic 800 mA, hFE 100–300, fT 300 MHz</td>
+      <td>
+        <a href="https://www.onsemi.com/pdf/datasheet/p2n2222a-d.pdf" target="_blank" rel="noopener">P2N2222A Datasheet</a>
+        <span class="vendor-badge">onsemi</span>
+      </td>
+    </tr>
+    <tr>
+      <td><code>2N2907 / A</code></td>
+      <td><span class="equiv">—</span></td>
+      <td>PNP switching — Vceo 60 V, Ic 600 mA, hFE 100–300, fT 200 MHz</td>
+      <td>
+        <a href="https://www.onsemi.com/download/data-sheet/pdf/2n2907a-d.pdf" target="_blank" rel="noopener">2N2907A Datasheet</a>
+        <span class="warn"> **no datasheet**</span>
+        <span class="vendor-badge">onsemi</span>
+      </td>
+    </tr>
+    <tr>
+      <td><code>2N3904</code></td>
+      <td><span class="equiv">—</span></td>
+      <td>NPN general purpose — Vceo 40 V, Ic 200 mA, hFE 100–300, fT 300 MHz</td>
+      <td>
+        <a href="https://www.onsemi.com/pdf/datasheet/2n3904-d.pdf" target="_blank" rel="noopener">2N3904 Datasheet</a>
+        <span class="vendor-badge">onsemi</span>
+      </td>
+    </tr>
+    <tr>
+      <td><code>2N3906</code></td>
+      <td><span class="equiv">—</span></td>
+      <td>PNP general purpose — Vceo 40 V, Ic 200 mA, hFE 100–300, fT 250 MHz</td>
+      <td>
+        <a href="https://www.onsemi.com/pdf/datasheet/2n3906-d.pdf" target="_blank" rel="noopener">2N3906 Datasheet</a>
+        <span class="vendor-badge">onsemi</span>
+      </td>
+    </tr>
+    <tr>
+      <td><code>A1015 (2SA1015)</code></td>
+      <td><span class="equiv">—</span></td>
+      <td>PNP low-noise small-signal — Vceo 60 V, Ic 150 mA, hFE 70–400, TO-92</td>
+      <td>
+        <a href="https://media.digikey.com/pdf/Data%20Sheets/Toshiba%20PDFs/2SA1015.pdf" target="_blank" rel="noopener">2SA1015 Datasheet</a>
+        <span class="warn"> **no datasheet**</span>
+        <span class="vendor-badge">Toshiba</span>
+      </td>
+    </tr>
+    <tr>
+      <td><code>BC327</code></td>
+      <td><span class="equiv">—</span></td>
+      <td>PNP high-gain small-signal — Vceo 50 V, Ic 800 mA, hFE 100–600, TO-92</td>
+      <td>
+        <a href="https://www.onsemi.com/pdf/datasheet/bc327-d.pdf" target="_blank" rel="noopener">BC327 Datasheet</a>
+        <span class="vendor-badge">onsemi</span>
+      </td>
+    </tr>
+    <tr>
+      <td><code>BC337</code></td>
+      <td><span class="equiv">—</span></td>
+      <td>NPN high-gain small-signal — Vceo 50 V, Ic 800 mA, hFE 100–600, TO-92</td>
+      <td>
+        <a href="https://www.onsemi.com/download/data-sheet/pdf/bc337-fsc-d.pdf" target="_blank" rel="noopener">BC337 Datasheet</a>
+        <span class="warn"> **no datasheet**</span>
+        <span class="vendor-badge">onsemi</span>
+      </td>
+    </tr>
+    <tr>
+      <td><code>C1815 (2SC1815)</code></td>
+      <td><span class="equiv">—</span></td>
+      <td>NPN low-noise small-signal — Vceo 60 V, Ic 150 mA, hFE 70–700, fT 80 MHz, TO-92</td>
+      <td>
+        <a href="https://media.digikey.com/pdf/Data%20Sheets/Toshiba%20PDFs/2SC1815.pdf" target="_blank" rel="noopener">2SC1815 Datasheet</a>
+        <span class="warn"> **no datasheet**</span>
+        <span class="vendor-badge">Toshiba</span>
+      </td>
+    </tr>
+    <tr>
+      <td><code>S8050</code></td>
+      <td><span class="equiv">—</span></td>
+      <td>NPN power switching — Vceo 40 V, Ic 1.5 A, hFE 85–300, TO-92</td>
+      <td>
+        <a href="https://www.onsemi.com/pdf/datasheet/ss8050-d.pdf" target="_blank" rel="noopener">SS8050 Datasheet</a>
+        <span class="warn"> **no datasheet**</span>
+        <span class="vendor-badge">onsemi</span>
+      </td>
+    </tr>
+    <tr>
+      <td><code>S8550</code></td>
+      <td><span class="equiv">—</span></td>
+      <td>PNP power switching — Vceo 40 V, Ic 1.5 A, hFE 85–300, TO-92</td>
+      <td>
+        <a href="https://www.onsemi.com/pdf/datasheet/ss8550-d.pdf" target="_blank" rel="noopener">SS8550 Datasheet</a>
+        <span class="warn"> **no datasheet**</span>
+        <span class="vendor-badge">onsemi</span>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ============================================================ -->
+<h2>Section 2 — Junction Field-Effect Transistors (JFET)</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Library Part</th>
+      <th>Equivalent</th>
+      <th>Description</th>
+      <th>Datasheet</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>NTE457</code></td>
+      <td><span class="equiv">2N5457</span></td>
+      <td>N-ch general purpose — VGS(off) −6 V, IDSS 1–5 mA, VDS 25 V</td>
+      <td>
+        <a href="https://www.vishay.com/docs/70774/70774.pdf" target="_blank" rel="noopener">2N5457/58/59 Datasheet</a>
+        <span class="vendor-badge">Vishay</span>
+      </td>
+    </tr>
+    <tr>
+      <td><code>NTE458</code></td>
+      <td><span class="equiv">J201 / 2N4117</span></td>
+      <td>N-ch low-noise audio — VGS(off) −0.3 to −1.5 V, IDSS 0.2–1 mA, VDS 50 V</td>
+      <td>
+        <a href="https://www.mouser.com/catalog/specsheets/j201.pdf" target="_blank" rel="noopener">J201/J202 Datasheet</a>
+        <span class="warn"> **no datasheet**</span>
+        <span class="vendor-badge">onsemi</span>
+      </td>
+    </tr>
+    <tr>
+      <td><code>NTE467</code></td>
+      <td><span class="equiv">2N5458</span></td>
+      <td>N-ch switching — VGS(off) −7 V max, IDSS 2–9 mA, VDS 30 V</td>
+      <td>
+        <a href="https://www.vishay.com/docs/70774/70774.pdf" target="_blank" rel="noopener">2N5457/58/59 Datasheet</a>
+        <span class="vendor-badge">Vishay</span>
+      </td>
+    </tr>
+    <tr>
+      <td><code>NTE489</code></td>
+      <td><span class="equiv">2N5462</span></td>
+      <td>P-ch general purpose — VGS(off) +3 to +7.5 V, IDSS 4–16 mA, VDS 30 V</td>
+      <td>
+        <a href="https://www.onsemi.com/download/data-sheet/pdf/2n5460-d.pdf" target="_blank" rel="noopener">2N5460/61/62 Datasheet</a>
+        <span class="warn"> **no datasheet**</span>
+        <span class="vendor-badge">onsemi</span>
+      </td>
+    </tr>
+    <tr>
+      <td><code>VET469</code></td>
+      <td><span class="equiv">NTE469 / BF244-type</span></td>
+      <td>N-ch high-current — VGS(off) −0.5 to −4 V, IDSS 50 mA max, VDS 35 V</td>
+      <td>
+        <a href="https://www.onsemi.com/download/data-sheet/pdf/pn4393-d.pdf" target="_blank" rel="noopener">PN4393 Datasheet</a>
+        <span class="warn"> **no datasheet**</span>
+        <span class="vendor-badge">onsemi</span>
+      </td>
+    </tr>
+    <tr>
+      <td><code>NTE460</code></td>
+      <td><span class="equiv">2N5460 (20 V)</span></td>
+      <td>P-ch low-voltage — VGS(off) +0.75 to +6 V, IDSS 1–5 mA, VDS 20 V</td>
+      <td>
+        <a href="https://www.onsemi.com/download/data-sheet/pdf/2n5460-d.pdf" target="_blank" rel="noopener">2N5460/61/62 Datasheet</a>
+        <span class="warn"> **no datasheet**</span>
+        <span class="vendor-badge">onsemi</span>
+      </td>
+    </tr>
+    <tr>
+      <td><code>NTE326</code></td>
+      <td><span class="equiv">2N5460 (40 V)</span></td>
+      <td>P-ch high-voltage — VGS(off) +0.75 to +9 V, IDSS 1–5 mA, VDS 40 V</td>
+      <td>
+        <a href="https://www.onsemi.com/download/data-sheet/pdf/2n5460-d.pdf" target="_blank" rel="noopener">2N5460/61/62 Datasheet</a>
+        <span class="warn"> **no datasheet**</span>
+        <span class="vendor-badge">onsemi</span>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ============================================================ -->
+<h2>Section 3 — Operational Amplifiers</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Library Part</th>
+      <th>Equivalent</th>
+      <th>Description</th>
+      <th>Datasheet</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>LM741N</code></td>
+      <td><span class="equiv">LM741</span></td>
+      <td>Single BJT-input op-amp — GBW 1 MHz, SR 0.5 V/µs, ±18 V rails</td>
+      <td>
+        <a href="https://www.ti.com/lit/ds/symlink/lm741.pdf" target="_blank" rel="noopener">LM741 Datasheet</a>
+        <span class="vendor-badge">TI</span>
+      </td>
+    </tr>
+    <tr>
+      <td><code>LM358N</code></td>
+      <td><span class="equiv">LM358</span></td>
+      <td>Dual op-amp, single-supply — GBW 700 kHz, SR 0.3 V/µs, CM input to V−</td>
+      <td>
+        <a href="https://www.ti.com/lit/ds/symlink/lm358.pdf" target="_blank" rel="noopener">LM358 Datasheet</a>
+        <span class="vendor-badge">TI</span>
+      </td>
+    </tr>
+    <tr>
+      <td><code>NTE987</code></td>
+      <td><span class="equiv">LM324</span></td>
+      <td>Quad low-power op-amp — GBW 1 MHz, SR 0.5 V/µs, DIP-14</td>
+      <td>
+        <a href="https://www.ti.com/lit/ds/symlink/lm324.pdf" target="_blank" rel="noopener">LM324 Datasheet</a>
+        <span class="vendor-badge">TI</span>
+      </td>
+    </tr>
+    <tr>
+      <td><code>NTE976</code></td>
+      <td><span class="equiv">TL071 / LF351</span></td>
+      <td>Single JFET-input op-amp — GBW 4 MHz, SR 13 V/µs, Rin ≈ 10¹² Ω</td>
+      <td>
+        <a href="https://www.ti.com/lit/ds/symlink/tl071.pdf" target="_blank" rel="noopener">TL071 Datasheet</a>
+        <span class="vendor-badge">TI</span>
+      </td>
+    </tr>
+    <tr>
+      <td><code>LMC6482</code></td>
+      <td><span class="equiv">LMC6482</span></td>
+      <td>
+        CMOS R2R quad op-amp — GBW 1.5 MHz, SR 2.7 V/µs, Rin ≈ 1 TΩ<br>
+        <span class="warn">⚠ Max supply ±8 V — NOT for standard ±12 V Eurorack rails</span>
+      </td>
+      <td>
+        <a href="https://www.ti.com/lit/ds/symlink/lmc6482.pdf" target="_blank" rel="noopener">LMC6482 Datasheet</a>
+        <span class="vendor-badge">TI</span>
+      </td>
+    </tr>
+    <tr>
+      <td><code>LMC6492</code></td>
+      <td><span class="equiv">LMC6492</span></td>
+      <td>
+        CMOS R2R dual op-amp — GBW 1.5 MHz, SR 2.7 V/µs, Rin ≈ 1 TΩ<br>
+        <span class="warn">⚠ Max supply ±8 V — NOT for standard ±12 V Eurorack rails</span>
+      </td>
+      <td>
+        <a href="https://www.ti.com/lit/ds/symlink/lmc6492.pdf" target="_blank" rel="noopener">LMC6492 Datasheet</a>
+        <span class="vendor-badge">TI</span>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ============================================================ -->
+<h2>Section 4 — Audio Amplifiers &amp; Preamps</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Library Part</th>
+      <th>Equivalent</th>
+      <th>Description</th>
+      <th>Datasheet</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>LM386</code></td>
+      <td><span class="equiv">LM386</span></td>
+      <td>Low-voltage audio power amp — gain 20×–200×, ~250 mW into 8 Ω, 4–12 V single-supply</td>
+      <td>
+        <a href="https://www.ti.com/lit/ds/symlink/lm386.pdf" target="_blank" rel="noopener">LM386 Datasheet</a>
+        <span class="vendor-badge">TI</span>
+      </td>
+    </tr>
+    <tr>
+      <td><code>NTE824</code></td>
+      <td><span class="equiv">NE5532</span></td>
+      <td>Dual low-noise op-amp — GBW 10 MHz, SR 9 V/µs, En 5 nV/√Hz, ±18 V rails</td>
+      <td>
+        <a href="https://www.ti.com/lit/ds/symlink/ne5532.pdf" target="_blank" rel="noopener">NE5532 Datasheet</a>
+        <span class="vendor-badge">TI</span>
+      </td>
+    </tr>
+    <tr>
+      <td><code>NTE983</code></td>
+      <td><span class="equiv">TL072</span></td>
+      <td>Dual JFET-input low-noise op-amp — GBW 3 MHz, SR 13 V/µs, Rin ≈ 10¹² Ω</td>
+      <td>
+        <a href="https://www.ti.com/lit/ds/symlink/tl072.pdf" target="_blank" rel="noopener">TL072 Datasheet</a>
+        <span class="vendor-badge">TI</span>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+</body>
+</html>
