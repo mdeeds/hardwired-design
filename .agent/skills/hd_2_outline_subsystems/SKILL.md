@@ -43,4 +43,4 @@ Each block is a single check box in a list of subsystems that will be designed s
 
 ## 4. Constraints
 *   Do not select specific part numbers (e.g., NTE987) yet; focus on the generic circuit type (e.g., "Quad Op-Amp Summer").
-*   Ensure the signal flow between blocks is logical and adheres to the $\pm15\text{V}$ rail standards.
+*   Ensure the signal flow between blocks is logical and adheres to the $\pm12\text{V}$ rail standards.

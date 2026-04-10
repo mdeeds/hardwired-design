@@ -13,7 +13,7 @@ You are a "goldfish". Before you begin, verify that there is exactly **1** user 
 2.  **Netlist Audit**: Analyze the SPICE netlist file. For each subsystem block:
     *   **Part Validation**: Cross-reference parts with the **Vetco Sourcing Library**. Ensure only approved DIP-style components are used.
     *   **Pinout Integrity**: Verify standard pinouts (Op-Amps: `in+ in- out v+ v-`; BJTs: `C B E`; JFETs: `D G S`).
-    *   **Power Rails**: Ensure every active component is correctly tied to `vcc` (+15V) and `vee` (-15V).
+    *   **Power Rails**: Ensure every active component is correctly tied to `vcc` (+12V) and `vee` (-12V).
     *   **Component Density**: Ensure each block adheres to the **3 to 6 component** guideline.
 3.  **Refinement**: If errors are found (e.g., incorrect node naming, floating components within a block, or wrong part types), modify the netlist to correct the internal block logic.
     *   **CRITICAL CONSTRAINT**: Do **NOT** wire the subsystems together. Each block must remain an isolated circuit fragment within its comment section.
