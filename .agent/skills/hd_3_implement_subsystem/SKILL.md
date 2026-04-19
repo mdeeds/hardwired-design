@@ -30,7 +30,7 @@ chat that has launched hd_design which invoked this skill.  If there is anything
 *   Update the specific section of the SPICE netlist with the functional circuit.
 
 ## 3. Engineering Standards
-*   **Rails**: All active components must be powered by `vcc` (+15V) and `vee` (-15V).
+*   **Rails**: All active components must be powered by `vcc` (+12V) and `vee` (-12V).
 *   **Signal Levels**: Aim for $10\text{V}_{pp}$ internal signal swings.
 *   **DIP Focus**: Ensure all selected ICs and transistors are from the approved DIP-compatible Vetco list.
 

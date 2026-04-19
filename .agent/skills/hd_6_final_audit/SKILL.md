@@ -12,7 +12,7 @@ You are a "goldfish". Before you begin, verify that there is exactly **1** user 
 2.  **System Integrity Audit**:
     *   **Connectivity Check**: Scan the SPICE netlist for any nodes that appear only once (floating nodes).
     *   **Safety Standards**: Verify that every IC has decoupling capacitors (100nF) on its power pins and every output jack has a 1k current-limiting resistor.
-    *   **Rail Validation**: Ensure no component is connected to rails exceeding its specific Vetco datasheet limits (e.g., checking that ±15V is not hitting an 8V rated chip).
+    *   **Rail Validation**: Ensure no component is connected to rails exceeding its specific Vetco datasheet limits (e.g., checking that ±12V is not hitting an 8V rated chip).
 3.  **BOM/Netlist Synchronization**:
     *   Perform a 1:1 count: Every designator in the netlist (R1, C2, U1, etc.) must have a corresponding entry in the `## 5. Sourcing Audit (BOM)` table in `DESIGN.md`.
     *   Update the BOM section to be the "source of truth."
@@ -37,7 +37,7 @@ You are a "goldfish". Before you begin, verify that there is exactly **1** user 
 2.  **Summary**: Provide a final technical summary to the user:
     *   Total Component Count (Passives vs. Actives).
     *   Final Estimated Build Cost.
-    *   Confirmation that the design adheres to the $\pm15\text{V}$ rail and $10\text{V}_{pp}$ standards.
+    *   Confirmation that the design adheres to the $\pm12\text{V}$ rail and $10\text{V}_{pp}$ standards.
 3.  **Closing**: Inform the user that the project is now "Build Ready" and suggest moving to physical breadboard validation or PCB layout.
 
 ## 5. Reference (Costing Rules)

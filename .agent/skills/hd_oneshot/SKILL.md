@@ -50,18 +50,29 @@ All designs must adhere to the following hardware specifications:
 | **NTE460** | P-Channel | 20V / 10mA | $6.66 | **Low Voltage:** Best for 0-10V sub-sections; caution on ±12V rails. |
 | **NTE326** | P-Channel | 40V / 10mA | $3.60 | **High Voltage:** Safe for full Eurorack rail swings (24V potential). |
 
-#### 4. Bipolar Junction Transistors (BJTs)
-| Part Number | Type | Max Vceo / Max Ic | Cost | Eurorack Suitability & Use Case |
-| :--- | :--- | :--- | :--- | :--- |
-| **VET123AP** | NPN | 40V / 200mA | $1.69 | **Universal NPN:** Standard (2N3904); used in logic and ladder filters. |
-| **NTE159** | PNP | 40V / 200mA | $1.26 | **Universal PNP:** Standard (2N3906); complement for 123AP. |
-| **NTE123A** | NPN | 40V / 800mA | $2.95 | **Switching:** High current (2N2222); drives lamps or relays. |
-| **NTE159M** | PNP | 60V / 600mA | $1.32 | **Robust PNP:** (2N2907A); high voltage/current safety for any rail. |
-| **NTE47** | NPN | 30V / 50mA | $0.72 | **Low-Noise:** Optimized for input stages and pre-amplification. |
-| **NTE196** | NPN | 70V / 7A | $3.24 | **Rail Splitter:** High-current sink (TIP31); main power ground stable. |
-| **NTE197** | PNP | 70V / 7A | $3.10 | **Rail Splitter:** High-current source (TIP32); complement to 196. |
-| **NTE288** | PNP | 80V / 500mA | $1.05 | **High Voltage:** Indestructible on modular rails; logic/signal use. |
+### 4. Bipolar Junction Transistors (BJTs) — Alphabetical with Common Equivalents
 
+| Part Number (Common Equivalent) | Type | Max Vceo / Max Ic | Cost | Eurorack Suitability & Use Case |
+| :--- | :--- | :--- | :--- | :--- |
+| **2N2222 / PN2222A** | NPN | 60V / 800mA | P/O VUPN1670| **Classic Workhorse:** Fast switching, logic, clocks, triggers. |
+| **2N2907 / A** | PNP | 60V / 600mA | P/O VUPN1670| **Classic PNP:** Complement to 2N2222; symmetry in analog designs. |
+| **2N3904** | NPN | 60V / 200mA | P/O VUPN1670| **Baseline NPN:** Buffers, logic, CV conditioning. |
+| **2N3906** | PNP | 40V / 200mA | P/O VUPN1670| **Baseline PNP:** Complement to 2N3904; low‑current analog paths. |
+| **A1015 (2SA1015)** | PNP | 60V / 100mA | P/O VUPN1670| **Low‑Noise PNP:** Preferred for audio paths and CV buffering. |
+| **BC327** | PNP | 50V / 800mA | P/O VUPN1670| **High‑Gain PNP:** Signal stages or moderate drivers. |
+| **BC337** | NPN | 50V / 800mA | P/O VUPN1670| **High‑Gain NPN:** Signal or switching; complements BC327. |
+| **C1815 (2SC1815)** | NPN | 60V / 150mA | P/O VUPN1670| **Low‑Noise NPN:** Expo converters, VCAs, preamps. |
+| **NTE123A (2N2222 / PN2222A)** | NPN | 40V / 800mA | $2.95 | **Switching:** High‑current logic and driver transistor. |
+| **NTE159 (2N3906)** | PNP | 40V / 200mA | $1.26 | **Universal PNP:** Small‑signal analog and logic. |
+| **NTE159M (2N2907A)** | PNP | 60V / 600mA | $1.32 | **Robust PNP:** Safer on full ±12V rail swings. |
+| **NTE196 (TIP31 / TIP31C)** | NPN | 70V / 7A | $3.24 | **Rail Splitter / Power:** High‑current sink, regulators. |
+| **NTE197 (TIP32 / TIP32C)** | PNP | 70V / 7A | $3.10 | **Rail Splitter / Power:** High‑current source complement. |
+| **NTE288 (MJE350‑class)** | PNP | 80V / 500mA | $1.05 | **High Voltage:** Very rugged signal/control applications. |
+| **NTE47 (2N5088 / 2N5089)** | NPN | 30V / 50mA | $0.72 | **Low‑Noise:** Audio inputs, preamps, VCAs. |
+| **S8050** | NPN | 40V / 1.5A | P/O VUPN1670| **Power Switching:** LEDs, gates, utility loads. |
+| **S8550** | PNP | 40V / 1.5A | P/O VUPN1670| **Power PNP:** Push‑pull and driver stages. |
+| **VET123AP (2N3904)** | NPN | 40V / 200mA | $1.69 | **Universal NPN:** Ladder filters, buffers, logic. |
+``
 ---
 
 ## 4. Operational Pipeline
