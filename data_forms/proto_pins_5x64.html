@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proto Pins (5x64)</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      background-color: #f0f0f0;
+    }
+
+    svg {
+      background-color: white;
+      border: 1px solid #ccc;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+
+<body>
+  <svg id="gridSvg" width="7in" height="9in" viewBox="0 0 7 9" xmlns="http://www.w3.org/2000/svg"></svg>
+
+  <script>
+    const svg = document.getElementById('gridSvg');
+    const xmlns = "http://www.w3.org/2000/svg";
+
+    for (let row = 0; row < 64; row++) {
+      for (let col = 0; col < 5; col++) {
+        const circle = document.createElementNS(xmlns, "circle");
+        circle.setAttribute("cx", 0.5 + (col * 0.1)); // 0.1" spacing
+        circle.setAttribute("cy", 0.5 + (row * 0.1)); // 0.1" spacing
+        circle.setAttribute("r", 0.01);              // 0.02" diameter
+        circle.setAttribute("fill", "black");
+        svg.appendChild(circle);
+      }
+    }
+  </script>
+</body>
+
+</html>
