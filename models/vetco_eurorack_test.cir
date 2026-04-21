@@ -18,15 +18,15 @@
 * ================================================================
 * SUPPLY RAILS
 * ================================================================
-VVCC  VCC  0   DC  12V     $ Eurorack +12V
-VVEE  VEE  0   DC -12V     $ Eurorack -12V
-VVCC9 VCC9 0   DC   9V     $ LM386 single supply
-VVCC5 VCC5 0   DC   5V     $ LMC648x low-voltage supply
+VVCC  vcc  0   DC  12V     $ Eurorack +12V
+VVEE  vee  0   DC -12V     $ Eurorack -12V
+VVCC9 vcc9 0   DC   9V     $ LM386 single supply
+VVCC5 vcc5 0   DC   5V     $ LMC648x low-voltage supply
 
 * Test signal sources
-VVIN_OP   VIN_OP   0  DC  0.5V    $ op-amp unity-gain input  (±12V parts)
-VVIN_LV   VIN_LV   0  DC  0.1V    $ low-voltage op-amp input (LMC parts)
-VVIN_AUD  VIN_AUD  0  DC  0.05V   $ audio amp input
+VVIN_OP   vin_op   0  DC  0.5V    $ op-amp unity-gain input  (±12V parts)
+VVIN_LV   vin_lv   0  DC  0.1V    $ low-voltage op-amp input (LMC parts)
+VVIN_AUD  vin_aud  0  DC  0.05V   $ audio amp input
 
 
 * ================================================================
@@ -40,44 +40,44 @@ VVIN_AUD  VIN_AUD  0  DC  0.05V   $ audio amp input
 * ================================================================
 
 * --- VET123AP  (2N3904 — NPN 40V/200mA) ---
-RB_Q1A  VCC  B_Q1  100k
-RC_Q1   VCC  C_Q1  4.7k
-Q1      C_Q1  B_Q1  0  VET123AP
+RB_Q1A  vcc  b_q1  100k
+RC_Q1   vcc  c_q1  4.7k
+Q1      c_q1  b_q1  0  VET123AP
 
 * --- NTE159    (2N3906 — PNP 40V/200mA) ---
-RB_Q2A  0    B_Q2  100k
-RC_Q2   C_Q2  0   4.7k
-Q2      C_Q2  B_Q2  VCC  NTE159
+RB_Q2A  0    b_q2  100k
+RC_Q2   c_q2  0   4.7k
+Q2      c_q2  b_q2  vcc  NTE159
 
 * --- NTE123A   (2N2222A — NPN 40V/800mA) ---
-RB_Q3A  VCC  B_Q3  100k
-RC_Q3   VCC  C_Q3  4.7k
-Q3      C_Q3  B_Q3  0   NTE123A
+RB_Q3A  vcc  b_q3  100k
+RC_Q3   vcc  c_q3  4.7k
+Q3      c_q3  b_q3  0   NTE123A
 
 * --- NTE159M   (2N2907A — PNP 60V/600mA) ---
-RB_Q4A  0    B_Q4  100k
-RC_Q4   C_Q4  0   4.7k
-Q4      C_Q4  B_Q4  VCC  NTE159M
+RB_Q4A  0    b_q4  100k
+RC_Q4   c_q4  0   4.7k
+Q4      c_q4  b_q4  vcc  NTE159M
 
 * --- NTE47     (MPSA18 — NPN low-noise 30V/50mA) ---
-RB_Q5A  VCC  B_Q5  100k
-RC_Q5   VCC  C_Q5  22k
-Q5      C_Q5  B_Q5  0   NTE47
+RB_Q5A  vcc  b_q5  100k
+RC_Q5   vcc  c_q5  22k
+Q5      c_q5  b_q5  0   NTE47
 
 * --- NTE196    (TIP31C — NPN power 70V/7A) ---
-RB_Q6A  VCC  B_Q6  10k
-RC_Q6   VCC  C_Q6  100
-Q6      C_Q6  B_Q6  0   NTE196
+RB_Q6A  vcc  b_q6  10k
+RC_Q6   vcc  c_q6  100
+Q6      c_q6  b_q6  0   NTE196
 
 * --- NTE197    (TIP32C — PNP power 70V/7A) ---
-RB_Q7A  0    B_Q7  10k
-RC_Q7   C_Q7  0   100
-Q7      C_Q7  B_Q7  VCC  NTE197
+RB_Q7A  0    b_q7  10k
+RC_Q7   c_q7  0   100
+Q7      c_q7  b_q7  vcc  NTE197
 
 * --- NTE288    (MPSA93 — PNP HV 80V/500mA) ---
-RB_Q8A  0    B_Q8  100k
-RC_Q8   C_Q8  0   4.7k
-Q8      C_Q8  B_Q8  VCC  NTE288
+RB_Q8A  0    b_q8  100k
+RC_Q8   c_q8  0   4.7k
+Q8      c_q8  b_q8  vcc  NTE288
 
 
 * ================================================================
@@ -90,54 +90,54 @@ Q8      C_Q8  B_Q8  VCC  NTE288
 * ================================================================
 
 * --- 2N2222  (PN2222A — NPN switching 60V/800mA) ---
-RB_Q9A  VCC  B_Q9  100k
-RC_Q9   VCC  C_Q9  4.7k
-Q9      C_Q9  B_Q9  0   2N2222
+RB_Q9A  vcc  b_q9  100k
+RC_Q9   vcc  c_q9  4.7k
+Q9      c_q9  b_q9  0   2N2222
 
 * --- 2N2907  (2N2907A — PNP switching 60V/600mA) ---
-RB_Q10A 0    B_Q10  100k
-RC_Q10  C_Q10  0   4.7k
-Q10     C_Q10  B_Q10  VCC  2N2907
+RB_Q10A 0    b_q10  100k
+RC_Q10  c_q10  0   4.7k
+Q10     c_q10  b_q10  vcc  2N2907
 
 * --- 2N3904  (NPN general purpose 40V/200mA) ---
-RB_Q11A VCC  B_Q11  100k
-RC_Q11  VCC  C_Q11  4.7k
-Q11     C_Q11  B_Q11  0   2N3904
+RB_Q11A vcc  b_q11  100k
+RC_Q11  vcc  c_q11  4.7k
+Q11     c_q11  b_q11  0   2N3904
 
 * --- 2N3906  (PNP general purpose 40V/200mA) ---
-RB_Q12A 0    B_Q12  100k
-RC_Q12  C_Q12  0   4.7k
-Q12     C_Q12  B_Q12  VCC  2N3906
+RB_Q12A 0    b_q12  100k
+RC_Q12  c_q12  0   4.7k
+Q12     c_q12  b_q12  vcc  2N3906
 
 * --- A1015   (2SA1015 — PNP low-noise 50V/150mA) ---
-RB_Q13A 0    B_Q13  100k
-RC_Q13  C_Q13  0   4.7k
-Q13     C_Q13  B_Q13  VCC  A1015
+RB_Q13A 0    b_q13  100k
+RC_Q13  c_q13  0   4.7k
+Q13     c_q13  b_q13  vcc  A1015
 
 * --- BC327   (PNP high-gain 50V/800mA) ---
-RB_Q14A 0    B_Q14  100k
-RC_Q14  C_Q14  0   4.7k
-Q14     C_Q14  B_Q14  VCC  BC327
+RB_Q14A 0    b_q14  100k
+RC_Q14  c_q14  0   4.7k
+Q14     c_q14  b_q14  vcc  BC327
 
 * --- BC337   (NPN high-gain 50V/800mA) ---
-RB_Q15A VCC  B_Q15  100k
-RC_Q15  VCC  C_Q15  4.7k
-Q15     C_Q15  B_Q15  0   BC337
+RB_Q15A vcc  b_q15  100k
+RC_Q15  vcc  c_q15  4.7k
+Q15     c_q15  b_q15  0   BC337
 
 * --- C1815   (2SC1815 — NPN low-noise 50V/150mA) ---
-RB_Q16A VCC  B_Q16  100k
-RC_Q16  VCC  C_Q16  4.7k
-Q16     C_Q16  B_Q16  0   C1815
+RB_Q16A vcc  b_q16  100k
+RC_Q16  vcc  c_q16  4.7k
+Q16     c_q16  b_q16  0   C1815
 
 * --- S8050   (NPN power switching 40V/1.5A) ---
-RB_Q17A VCC  B_Q17  10k
-RC_Q17  VCC  C_Q17  100
-Q17     C_Q17  B_Q17  0   S8050
+RB_Q17A vcc  b_q17  10k
+RC_Q17  vcc  c_q17  100
+Q17     c_q17  b_q17  0   S8050
 
 * --- S8550   (PNP power switching 40V/1.5A) ---
-RB_Q18A 0    B_Q18  10k
-RC_Q18  C_Q18  0   100
-Q18     C_Q18  B_Q18  VCC  S8550
+RB_Q18A 0    b_q18  10k
+RC_Q18  c_q18  0   100
+Q18     c_q18  b_q18  vcc  S8550
 
 
 * ================================================================
@@ -150,46 +150,46 @@ Q18     C_Q18  B_Q18  VCC  S8550
 * ================================================================
 
 * --- NTE457  (2N5457 — N-ch 25V/10mA) ---
-RG_J1  0    G_J1  1MEG
-RD_J1  VCC  D_J1  10k
-RS_J1  S_J1  0    1k
-J1     D_J1  G_J1  S_J1  NTE457
+RG_J1  0    g_j1  1MEG
+RD_J1  vcc  d_j1  10k
+RS_J1  s_j1  0    1k
+J1     d_j1  g_j1  s_j1  NTE457
 
 * --- NTE458  (J201 / 2N4117 — N-ch low-noise 50V/5mA) ---
-RG_J2  0    G_J2  1MEG
-RD_J2  VCC  D_J2  10k
-RS_J2  S_J2  0    2.2k
-J2     D_J2  G_J2  S_J2  NTE458
+RG_J2  0    g_j2  1MEG
+RD_J2  vcc  d_j2  10k
+RS_J2  s_j2  0    2.2k
+J2     d_j2  g_j2  s_j2  NTE458
 
 * --- NTE467  (2N5458 — N-ch switch 30V/10mA) ---
-RG_J3  0    G_J3  1MEG
-RD_J3  VCC  D_J3  10k
-RS_J3  S_J3  0    1k
-J3     D_J3  G_J3  S_J3  NTE467
+RG_J3  0    g_j3  1MEG
+RD_J3  vcc  d_j3  10k
+RS_J3  s_j3  0    1k
+J3     d_j3  g_j3  s_j3  NTE467
 
 * --- VET469  (BF244-type — N-ch 35V/50mA) ---
-RG_J4  0    G_J4  1MEG
-RD_J4  VCC  D_J4  4.7k
-RS_J4  S_J4  0    470
-J4     D_J4  G_J4  S_J4  VET469
+RG_J4  0    g_j4  1MEG
+RD_J4  vcc  d_j4  4.7k
+RS_J4  s_j4  0    470
+J4     d_j4  g_j4  s_j4  VET469
 
 * --- NTE489  (2N5462 — P-ch 30V/50mA) ---
-RG_J5  VCC  G_J5  1MEG
-RD_J5  D_J5  0    10k
-RS_J5  VCC  S_J5  1k
-J5     D_J5  G_J5  S_J5  NTE489
+RG_J5  vcc  g_j5  1MEG
+RD_J5  d_j5  0    10k
+RS_J5  vcc  s_j5  1k
+J5     d_j5  g_j5  s_j5  NTE489
 
 * --- NTE460  (2N5460-type — P-ch 20V/10mA) ---
-RG_J6  VCC  G_J6  1MEG
-RD_J6  D_J6  0    10k
-RS_J6  VCC  S_J6  1k
-J6     D_J6  G_J6  S_J6  NTE460
+RG_J6  vcc  g_j6  1MEG
+RD_J6  d_j6  0    10k
+RS_J6  vcc  s_j6  1k
+J6     d_j6  g_j6  s_j6  NTE460
 
 * --- NTE326  (2N5460-type — P-ch 40V/10mA) ---
-RG_J7  VCC  G_J7  1MEG
-RD_J7  D_J7  0    10k
-RS_J7  VCC  S_J7  1k
-J7     D_J7  G_J7  S_J7  NTE326
+RG_J7  vcc  g_j7  1MEG
+RD_J7  d_j7  0    10k
+RS_J7  vcc  s_j7  1k
+J7     d_j7  g_j7  s_j7  NTE326
 
 
 * ================================================================
@@ -202,34 +202,34 @@ J7     D_J7  G_J7  S_J7  NTE326
 * ================================================================
 
 * --- LM741N  (single BJT-input, 1 MHz GBW) ---
-XU_LM741N   VIN_OP  VOUT_741  VCC  VEE  VOUT_741   LM741N
+XU_LM741N   vin_op  vout_741  vcc  vee  vout_741   LM741N
 
 * --- LM358N  (dual BJT-input, ~700 kHz GBW) ---
-XU_LM358N   VCC VEE
-+           VIN_OP VOUT_358A VOUT_358A
-+           VIN_OP VOUT_358B VOUT_358B  LM358N
+XU_LM358N   vcc vee
++           vin_op vout_358a vout_358a
++           vin_op vout_358b vout_358b  LM358N
 
 * --- NTE987  (quad LM324-type, 1 MHz GBW) ---
-XU_NTE987   VCC VEE
-+           VIN_OP VOUT_987A VOUT_987A
-+           VIN_OP VOUT_987B VOUT_987B
-+           VIN_OP VOUT_987C VOUT_987C
-+           VIN_OP VOUT_987D VOUT_987D  NTE987
+XU_NTE987   vcc vee
++           vin_op vout_987a vout_987a
++           vin_op vout_987b vout_987b
++           vin_op vout_987c vout_987c
++           vin_op vout_987d vout_987d  NTE987
 
 * --- NTE976  (JFET-input TL071-type, 4 MHz GBW) ---
-XU_NTE976   VIN_OP  VOUT_976  VCC  VEE  VOUT_976   NTE976
+XU_NTE976   vin_op  vout_976  vcc  vee  vout_976   NTE976
 
 * --- LMC6482  (quad, *** NOT suitable for ±12V; at +5V/GND) ---
-XU_LMC6482  VCC5 0
-+           VIN_LV VOUT_6482A VOUT_6482A
-+           VIN_LV VOUT_6482B VOUT_6482B
-+           VIN_LV VOUT_6482C VOUT_6482C
-+           VIN_LV VOUT_6482D VOUT_6482D  LMC6482
+XU_LMC6482  vcc5 0
++           vin_lv vout_6482a vout_6482a
++           vin_lv vout_6482b vout_6482b
++           vin_lv vout_6482c vout_6482c
++           vin_lv vout_6482d vout_6482d  LMC6482
 
 * --- LMC6492  (dual, *** NOT suitable for ±12V; at +5V/GND) ---
-XU_LMC6492  VCC5 0
-+           VIN_LV VOUT_6492A VOUT_6492A
-+           VIN_LV VOUT_6492B VOUT_6492B  LMC6492
+XU_LMC6492  vcc5 0
++           vin_lv vout_6492a vout_6492a
++           vin_lv vout_6492b vout_6492b  LMC6492
 
 
 * ================================================================
@@ -237,18 +237,18 @@ XU_LMC6492  VCC5 0
 * ================================================================
 
 * --- LM386  (single-supply, 9V; pin 4 = GND, output ≈ VCC/2) ---
-XU_LM386    VIN_AUD  0  VCC9  0   VOUT_386   LM386
-RLOAD_386   VOUT_386  0  8       $ 8 Ω speaker load
+XU_LM386    vin_aud  0  vcc9  0   vout_386   LM386
+RLOAD_386   vout_386  0  8       $ 8 Ω speaker load
 
 * --- NTE824  (NE5532-type dual low-noise, 10 MHz GBW) ---
-XU_NTE824   VCC VEE
-+           VIN_AUD VOUT_824A VOUT_824A
-+           VIN_AUD VOUT_824B VOUT_824B  NTE824
+XU_NTE824   vcc vee
++           vin_aud vout_824a vout_824a
++           vin_aud vout_824b vout_824b  NTE824
 
 * --- NTE983  (TL072-type dual JFET-input, 3 MHz GBW) ---
-XU_NTE983   VCC VEE
-+           VIN_AUD VOUT_983A VOUT_983A
-+           VIN_AUD VOUT_983B VOUT_983B  NTE983
+XU_NTE983   vcc vee
++           vin_aud vout_983a vout_983a
++           vin_aud vout_983b vout_983b  NTE983
 
 
 * ================================================================
@@ -257,17 +257,17 @@ XU_NTE983   VCC VEE
 .OP
 
 * Print op-amp/amp output voltages (should track input signals)
-.PRINT DC V(VOUT_741)    V(VOUT_358A)  V(VOUT_987A)  V(VOUT_976)
-.PRINT DC V(VOUT_6482A)  V(VOUT_6492A) V(VOUT_386)   V(VOUT_824A) V(VOUT_983A)
+.PRINT DC V(vout_741)    V(vout_358a)  V(vout_987a)  V(vout_976)
+.PRINT DC V(vout_6482a)  V(vout_6492a) V(vout_386)   V(vout_824a) V(vout_983a)
 
 * Print BJT collector voltages (Section 1 — NTE/VET parts)
-.PRINT DC V(C_Q1) V(C_Q2) V(C_Q3) V(C_Q4) V(C_Q5) V(C_Q6) V(C_Q7) V(C_Q8)
+.PRINT DC V(c_q1) V(c_q2) V(c_q3) V(c_q4) V(c_q5) V(c_q6) V(c_q7) V(c_q8)
 
 * Print BJT collector voltages (Section 1b — VUPN1670 kit parts)
-.PRINT DC V(C_Q9) V(C_Q10) V(C_Q11) V(C_Q12) V(C_Q13) V(C_Q14)
-.PRINT DC V(C_Q15) V(C_Q16) V(C_Q17) V(C_Q18)
+.PRINT DC V(c_q9) V(c_q10) V(c_q11) V(c_q12) V(c_q13) V(c_q14)
+.PRINT DC V(c_q15) V(c_q16) V(c_q17) V(c_q18)
 
 * Print JFET drain voltages
-.PRINT DC V(D_J1) V(D_J2) V(D_J3) V(D_J4) V(D_J5) V(D_J6) V(D_J7)
+.PRINT DC V(d_j1) V(d_j2) V(d_j3) V(d_j4) V(d_j5) V(d_j6) V(d_j7)
 
 .END
