@@ -22,28 +22,24 @@
       "showGrid": true,
       "traces": [
         {
-          "color": "rgb(252, 141, 98)",
-          "signal": "V(/SERVO_1k)",
-          "trace_type": 2049
+          "color": "rgb(228, 26, 28)",
+          "signal": "log(V(+15V) - V(/OUT_3)) / log(2)",
+          "trace_type": 2048
         },
         {
-          "color": "rgb(255, 127, 0)",
-          "signal": "V(/V_OUT_1k)",
-          "trace_type": 2049
-        },
-        {
-          "color": "rgb(141, 160, 203)",
-          "signal": "V(Net-_Q5-C_)",
-          "trace_type": 2049
+          "color": "rgb(247, 129, 191)",
+          "signal": "log(V(+15V) - V(/OUT_4)) / log(2)",
+          "trace_type": 2048
         }
       ]
     }
   ],
   "user_defined_signals": [
-    "log(V(/V_OUT_100k))",
-    "log(V(/V_OUT_10k))",
-    "log(V(/V_OUT_1k))",
-    "log(V(/V_OUT_100))"
+    "log(V(+15V) - V(/OUT_3)) / log(2)",
+    "log(V(+15V) - V(/OUT_4)) / log(2)",
+    "log(V(/OUT_1)) / log(2)",
+    "log(V(/OUT_3))/log(2)",
+    "log(V(+15V) - V(/OUT_6)) / log(2)"
   ],
   "version": 7
 }

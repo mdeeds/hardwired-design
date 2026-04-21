@@ -256,7 +256,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "transistor_eval.kicad_pro",
+    "filename": "minimoog_matching.kicad_pro",
     "version": 3
   },
   "net_settings": {
@@ -410,7 +410,7 @@
         "version": 0
       },
       "model_mode": 4,
-      "workbook_filename": "transistor_eval.wbk"
+      "workbook_filename": "minimoog_matching.wbk"
     },
     "page_layout_descr_file": "",
     "plot_directory": "",
@@ -419,17 +419,17 @@
     "subpart_id_separator": 0,
     "top_level_sheets": [
       {
-        "filename": "transistor_eval.kicad_sch",
+        "filename": "minimoog_matching.kicad_sch",
         "name": "Root",
-        "uuid": "ff0d308d-bb82-4b79-904b-6216103fc09a"
+        "uuid": "d29fb856-7527-4138-b0f0-e34ad836ebc3"
       }
     ],
-    "used_designators": "Q1-11,R1-21,#PWR1,#PWR6-32,U1-2",
+    "used_designators": "Q1-2,U1-2,V1-2,#GND1,R1-7,#PWR1-12",
     "variants": []
   },
   "sheets": [
     [
-      "ff0d308d-bb82-4b79-904b-6216103fc09a",
+      "d29fb856-7527-4138-b0f0-e34ad836ebc3",
       "Root"
     ]
   ],
