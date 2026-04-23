@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hardwired Oscilloscope - XY Plot</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="app-container">
+    <header>
+      <h1>Analog XY Oscilloscope</h1>
+      <p class="subtitle">Keyboard controlled reference waves</p>
+    </header>
+
+    <main>
+      <div class="scope-frame">
+        <canvas id="scopeCanvas"></canvas>
+      </div>
+
+      <div class="controls">
+        <div class="control-group">
+          <label for="deviceSelect">Input Device:</label>
+          <select id="deviceSelect">
+            <option value="">Default Device</option>
+          </select>
+          <label for="selectX">X Axis Source</label>
+          <select id="selectX">
+            <option value="left">Left Channel</option>
+            <option value="right" selected>Right Channel</option>
+            <option value="sine">Sine Ref</option>
+            <option value="saw">Saw Ref</option>
+            <option value="leftDelay">1/4 λ Delayed Left</option>
+            <option value="rightDelay">1/4 λ Delayed Right</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="selectY">Y Axis Source</label>
+          <select id="selectY">
+            <option value="left" selected>Left Channel</option>
+            <option value="right">Right Channel</option>
+            <option value="sine">Sine Ref</option>
+            <option value="saw">Saw Ref</option>
+            <option value="leftDelay">1/4 λ Delayed Left</option>
+            <option value="rightDelay">1/4 λ Delayed Right</option>
+          </select>
+        </div>
+
+        <div class="kb-info">
+          <p><strong>Keys:</strong> Z-M (Octave 3), Q-I (Octave 4)</p>
+          <p>Black keys are on the rows above.</p>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="script.js"></script>
+</body>
+
+</html>
