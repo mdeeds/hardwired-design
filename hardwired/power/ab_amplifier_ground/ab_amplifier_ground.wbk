@@ -1,0 +1,67 @@
+{
+  "custom_cursors": 2,
+  "last_sch_text_sim_command": "",
+  "tabs": [
+    {
+      "analysis": "TRAN",
+      "commands": [
+        ".tran 100u 10m",
+        ".kicad adjustpaths",
+        ".save all",
+        ".probe alli",
+        ".probe allp"
+      ],
+      "dottedSecondary": true,
+      "margins": {
+        "bottom": 45,
+        "left": 70,
+        "right": 70,
+        "top": 30
+      },
+      "measurements": [],
+      "showGrid": true,
+      "traces": [
+        {
+          "color": "rgb(152, 78, 163)",
+          "cursor2": {
+            "position": 0.0059967320261437905,
+            "x_format": "3~s",
+            "y_format": "3~A"
+          },
+          "cursorD": {
+            "x_format": "3~s",
+            "y_format": "3~A"
+          },
+          "signal": "I(R7)",
+          "trace_type": 258
+        },
+        {
+          "color": "rgb(55, 126, 184)",
+          "signal": "V(+12V)",
+          "trace_type": 257
+        },
+        {
+          "color": "rgb(77, 175, 74)",
+          "signal": "V(-12V)",
+          "trace_type": 257
+        },
+        {
+          "color": "rgb(228, 26, 28)",
+          "cursor1": {
+            "position": 0.006068965517241379,
+            "x_format": "3~s",
+            "y_format": "3~A"
+          },
+          "cursorD": {
+            "x_format": "3~s",
+            "y_format": "3~A"
+          },
+          "signal": "V(/OUT)",
+          "trace_type": 257
+        }
+      ]
+    }
+  ],
+  "user_defined_signals": [],
+  "version": 7
+}
