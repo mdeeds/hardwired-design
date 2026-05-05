@@ -40,6 +40,12 @@ from pathlib import Path
 # ── Defaults ────────────────────────────────────────────────────────
 KICAD_BASE = r"C:\Program Files\KiCad"
 
+# Track which DLL directories have already been added to avoid repeated
+# calls to os.add_dll_directory (each call grows Windows's internal DLL
+# search path; after hundreds of optimizer iterations it exceeds the
+# system limit and raises WinError 206).
+_dll_dirs_registered: set[str] = set()
+
 # ── ngspice vector_info struct ──────────────────────────────────────
 class NgComplex(Structure):
     _fields_ = [("cx_real", c_double), ("cx_imag", c_double)]
@@ -156,7 +162,9 @@ def run_netlist(
 
     # ── Load DLL ────────────────────────────────────────────────────
     dll_dir = os.path.dirname(dll_path)
-    os.add_dll_directory(dll_dir)
+    if dll_dir not in _dll_dirs_registered:
+        os.add_dll_directory(dll_dir)
+        _dll_dirs_registered.add(dll_dir)
     ng = ctypes.CDLL(dll_path)
 
     # ── ngSpice_Init ────────────────────────────────────────────────
