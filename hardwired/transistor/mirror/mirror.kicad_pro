@@ -256,7 +256,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "multivibrator.kicad_pro",
+    "filename": "mirror.kicad_pro",
     "version": 3
   },
   "net_settings": {
@@ -410,7 +410,7 @@
         "version": 0
       },
       "model_mode": 4,
-      "workbook_filename": "multivibrator.wbk"
+      "workbook_filename": "mirror.wbk"
     },
     "page_layout_descr_file": "",
     "plot_directory": "",
@@ -419,17 +419,17 @@
     "subpart_id_separator": 0,
     "top_level_sheets": [
       {
-        "filename": "multivibrator.kicad_sch",
+        "filename": "mirror.kicad_sch",
         "name": "Root",
-        "uuid": "69157d56-8db0-48be-aa5a-7a05a2bc1116"
+        "uuid": "896be90a-e38c-44ff-ae5f-aa9c6d2f69cd"
       }
     ],
-    "used_designators": "#PWR16,#PWR19-26,U5,R11-13,V3,Q1-5",
+    "used_designators": "V1,Q1-2,#GND1,R1-2,#PWR1-5,D1-2",
     "variants": []
   },
   "sheets": [
     [
-      "69157d56-8db0-48be-aa5a-7a05a2bc1116",
+      "896be90a-e38c-44ff-ae5f-aa9c6d2f69cd",
       "Root"
     ]
   ],

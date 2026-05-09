@@ -5,7 +5,7 @@
     {
       "analysis": "TRAN",
       "commands": [
-        ".tran 10u 20m",
+        ".tran 1u 20m",
         ".kicad adjustpaths",
         ".save all",
         ".probe alli",
@@ -22,18 +22,8 @@
       "showGrid": true,
       "traces": [
         {
-          "color": "rgb(255, 127, 0)",
-          "signal": "V(/U2_MINUS)",
-          "trace_type": 257
-        },
-        {
-          "color": "rgb(255, 255, 51)",
-          "signal": "V(/U2_OUT)",
-          "trace_type": 257
-        },
-        {
-          "color": "rgb(166, 86, 40)",
-          "signal": "V(/U2_PLUS)",
+          "color": "rgb(55, 126, 184)",
+          "signal": "V(/U2OUT)",
           "trace_type": 257
         }
       ]
