@@ -15,6 +15,7 @@
 * CROSS-REFERENCE TABLE:
 *   NTE987   → LM324  (quad low-power op-amp, DIP-14 4-section package)
 *   NTE976   → TL071-type (single JFET-input high-Z op-amp)
+*   NE5532   → NE5532 (dual low-noise op-amp, DIP-8 2-section package)
 *   NTE824   → NE5532 (dual low-noise op-amp, DIP-8 2-section package)
 *   NTE983   → TL072  (dual JFET-input low-noise, DIP-8 2-section package)
 *   NTE458   → J201 / 2N4117 (N-ch JFET, low-noise audio)
@@ -45,7 +46,7 @@
 *
 * OP-AMP USAGE:
 *   Singles  (LM741N, NTE976): XAMP1 IN+ IN- V+ V- OUT <ModelName>
-*   Duals    (LM358N, NTE983, LMC6492, NTE824):
+*   Duals    (LM358N, NTE983, LMC6492, NE5532, NTE824):
 *     XAMP1 VCC VEE INA_P INA_N OUTA INB_P INB_N OUTB <ModelName>
 *   Quads    (NTE987, LMC6482):
 *     XAMP1 VCC VEE INA_P INA_N OUTA INB_P INB_N OUTB
@@ -70,7 +71,7 @@
 * ----------------------------------------------------------------
 .MODEL VET123AP NPN(
 + IS=6.734f   XTI=3    EG=1.11  VAF=74.03
-+ BF=416.4    NE=1.259 ISE=6.734f  IKF=66.78m  XTB=1.5
++ BF=416.4    NF=1.0   NE=1.259 ISE=6.734f  IKF=66.78m  XTB=1.5
 + BR=0.7371   NC=2     ISC=0    IKR=0
 + RC=1        CJC=3.638p  VJC=0.75   MJC=0.3333  FC=0.5
 + CJE=4.493p  VJE=0.75   MJE=0.3333
@@ -84,7 +85,7 @@
 * ----------------------------------------------------------------
 .MODEL NTE159 PNP(
 + IS=1.41f    XTI=3    EG=1.11  VAF=18.7
-+ BF=180.7    NE=1.394 ISE=0    IKF=80m     XTB=1.5
++ BF=180.7    NF=1.0   NE=1.394 ISE=0    IKF=80m     XTB=1.5
 + BR=4.977    NC=2     ISC=0    IKR=0
 + RC=2.5      CJC=9.728p  VJC=0.75   MJC=0.5776  FC=0.5
 + CJE=8.063p  VJE=0.6609 MJE=0.3677
@@ -98,7 +99,7 @@
 * ----------------------------------------------------------------
 .MODEL NTE123A NPN(
 + IS=3.108E-14  XTI=3    EG=1.11  VAF=131.5
-+ BF=217.5      NE=1.541 ISE=190.7E-15  IKF=1.296  XTB=1.5
++ BF=217.5      NF=1.0   NE=1.541 ISE=190.7E-15  IKF=1.296  XTB=1.5
 + BR=6.18       NC=2     ISC=0    IKR=0
 + RC=1          CJC=14.57p  VJC=0.75  MJC=0.3333  FC=0.5
 + CJE=26.08p    VJE=0.75   MJE=0.3333
@@ -112,7 +113,7 @@
 * ----------------------------------------------------------------
 .MODEL NTE159M PNP(
 + IS=650.6E-18  XTI=3    EG=1.11  VAF=115.7
-+ BF=231.7      NE=1.829 ISE=54.81E-15  IKF=1.079  XTB=1.5
++ BF=231.7      NF=1.0   NE=1.829 ISE=54.81E-15  IKF=1.079  XTB=1.5
 + BR=3.563      NC=2     ISC=0    IKR=0
 + RC=0.715      CJC=14.76p  VJC=0.75  MJC=0.3333  FC=0.5
 + CJE=19.82p    VJE=0.75   MJE=0.3333
@@ -126,7 +127,7 @@
 * ----------------------------------------------------------------
 .MODEL NTE47 NPN(
 + IS=2.165E-15  XTI=3    EG=1.11  VAF=200
-+ BF=600        NE=1.5   ISE=100E-15   IKF=60m   XTB=1.5
++ BF=600        NF=1.0   NE=1.5   ISE=100E-15   IKF=60m   XTB=1.5
 + BR=4          NC=2     ISC=0    IKR=0
 + RC=1          CJC=4p   VJC=0.75  MJC=0.3333  FC=0.5
 + CJE=12p       VJE=0.75  MJE=0.3333
@@ -140,7 +141,7 @@
 * ----------------------------------------------------------------
 .MODEL NTE196 NPN(
 + IS=3.045E-13  XTI=3    EG=1.11  VAF=100
-+ BF=75         NE=1.5   ISE=203E-15   IKF=3     XTB=1.5
++ BF=75         NF=1.0   NE=1.5   ISE=203E-15   IKF=3     XTB=1.5
 + BR=4          NC=2     ISC=0    IKR=0
 + RC=0.1        CJC=168p  VJC=0.75  MJC=0.3333  FC=0.5
 + CJE=70p       VJE=0.75  MJE=0.3333
@@ -154,7 +155,7 @@
 * ----------------------------------------------------------------
 .MODEL NTE197 PNP(
 + IS=3.045E-13  XTI=3    EG=1.11  VAF=100
-+ BF=75         NE=1.5   ISE=203E-15   IKF=3     XTB=1.5
++ BF=75         NF=1.0   NE=1.5   ISE=203E-15   IKF=3     XTB=1.5
 + BR=4          NC=2     ISC=0    IKR=0
 + RC=0.1        CJC=168p  VJC=0.75  MJC=0.3333  FC=0.5
 + CJE=70p       VJE=0.75  MJE=0.3333
@@ -169,7 +170,7 @@
 * ----------------------------------------------------------------
 .MODEL NTE288 PNP(
 + IS=4.259E-15  XTI=3    EG=1.11  VAF=100
-+ BF=40         NE=1.5   ISE=100E-15   IKF=0.1   XTB=1.5
++ BF=40         NF=1.0   NE=1.5   ISE=100E-15   IKF=0.1   XTB=1.5
 + BR=4          NC=2     ISC=0    IKR=0
 + RC=1.2        CJC=8p   VJC=0.75  MJC=0.3333  FC=0.5
 + CJE=12p       VJE=0.75  MJE=0.3333
@@ -192,7 +193,7 @@
 * ----------------------------------------------------------------
 .MODEL 2N2222 NPN(
 + IS=14.34f   XTI=3    EG=1.11  VAF=74.03
-+ BF=255.9    NE=1.307 ISE=14.34f  IKF=0.2847  XTB=1.5
++ BF=255.9    NF=1.0   NE=1.307 ISE=14.34f  IKF=0.2847  XTB=1.5
 + BR=6.092    NC=2     ISC=0    IKR=0
 + RC=1        CJC=7.306p  VJC=0.75  MJC=0.3333  FC=0.5
 + CJE=22.01p  VJE=0.75   MJE=0.3333
@@ -206,7 +207,7 @@
 * ----------------------------------------------------------------
 .MODEL 2N2907 PNP(
 + IS=650.6E-18  XTI=3    EG=1.11  VAF=115.7
-+ BF=231.7      NE=1.829 ISE=54.81E-15  IKF=1.079  XTB=1.5
++ BF=231.7      NF=1.0   NE=1.829 ISE=54.81E-15  IKF=1.079  XTB=1.5
 + BR=3.563      NC=2     ISC=0    IKR=0
 + RC=0.715      CJC=14.76p  VJC=0.75  MJC=0.3333  FC=0.5
 + CJE=19.82p    VJE=0.75   MJE=0.3333
@@ -220,7 +221,7 @@
 * ----------------------------------------------------------------
 .MODEL 2N3904 NPN(
 + IS=6.734f   XTI=3    EG=1.11  VAF=74.03
-+ BF=416.4    NE=1.259 ISE=6.734f  IKF=66.78m  XTB=1.5
++ BF=416.4    NF=1.0   NE=1.259 ISE=6.734f  IKF=66.78m  XTB=1.5
 + BR=0.7371   NC=2     ISC=0    IKR=0
 + RC=1        CJC=3.638p  VJC=0.75   MJC=0.3333  FC=0.5
 + CJE=4.493p  VJE=0.75   MJE=0.3333
@@ -234,7 +235,7 @@
 * ----------------------------------------------------------------
 .MODEL 2N3906 PNP(
 + IS=1.41f    XTI=3    EG=1.11  VAF=18.7
-+ BF=180.7    NE=1.394 ISE=0    IKF=80m     XTB=1.5
++ BF=180.7    NF=1.0   NE=1.394 ISE=0    IKF=80m     XTB=1.5
 + BR=4.977    NC=2     ISC=0    IKR=0
 + RC=2.5      CJC=9.728p  VJC=0.75   MJC=0.5776  FC=0.5
 + CJE=8.063p  VJE=0.6609 MJE=0.3677
@@ -248,7 +249,7 @@
 * ----------------------------------------------------------------
 .MODEL A1015 PNP(
 + IS=2.04E-15  XTI=3    EG=1.11  VAF=50
-+ BF=400       NE=1.5   ISE=300E-15  IKF=0.15   XTB=1.5
++ BF=400       NF=1.0   NE=1.5   ISE=300E-15  IKF=0.15   XTB=1.5
 + BR=10        NC=2     ISC=0    IKR=0
 + RC=1.5       CJC=16p  VJC=0.75  MJC=0.3333  FC=0.5
 + CJE=15p      VJE=0.75  MJE=0.3333
@@ -262,7 +263,7 @@
 * ----------------------------------------------------------------
 .MODEL BC327 PNP(
 + IS=2.13E-15  XTI=3    EG=1.11  VAF=63.7
-+ BF=300       NE=1.5   ISE=620E-15  IKF=0.5   XTB=1.5
++ BF=300       NF=1.0   NE=1.5   ISE=620E-15  IKF=0.5   XTB=1.5
 + BR=10        NC=2     ISC=0    IKR=0
 + RC=0.5       CJC=9p   VJC=0.75  MJC=0.3333  FC=0.5
 + CJE=20p      VJE=0.75  MJE=0.3333
@@ -276,7 +277,7 @@
 * ----------------------------------------------------------------
 .MODEL BC337 NPN(
 + IS=2.13E-15  XTI=3    EG=1.11  VAF=63.7
-+ BF=300       NE=1.5   ISE=620E-15  IKF=0.5   XTB=1.5
++ BF=300       NF=1.0   NE=1.5   ISE=620E-15  IKF=0.5   XTB=1.5
 + BR=10        NC=2     ISC=0    IKR=0
 + RC=0.5       CJC=9p   VJC=0.75  MJC=0.3333  FC=0.5
 + CJE=20p      VJE=0.75  MJE=0.3333
@@ -286,12 +287,13 @@
 * C1815 — NPN Low-Noise Small-Signal  (2SC1815; Toshiba)
 *   Vceo=60V  Ic=150mA  hFE=70–700  fT=80MHz
 *   Use: Expo converters, VCAs, preamps; prime audio-path NPN.
-*   Source: Derived from Toshiba 2SC1815 datasheet parameters.
+*   Source: onsemi KSC1815 datasheet: hFE=200 typ @ Ic<80mA, Vce=6V.
+*           IS calibrated to Ic=1mA @ Vbe=0.65V per datasheet curve.
 * ----------------------------------------------------------------
 .MODEL C1815 NPN(
-+ IS=2.04E-15  XTI=3    EG=1.11  VAF=80
-+ BF=400       NE=1.5   ISE=300E-15  IKF=0.15   XTB=1.5
-+ BR=10        NC=2     ISC=0    IKR=0
++ IS=1.20E-14  XTI=3    EG=1.11  VAF=80
++ BF=195       NF=1.0   NE=1.5   ISE=5E-15    IKF=1.5    XTB=1.5
++ BR=10        NC=2     ISC=1E-15  IKR=0.1
 + RC=1         CJC=6p   VJC=0.75  MJC=0.3333  FC=0.5
 + CJE=15p      VJE=0.75  MJE=0.3333
 + TR=50n       TF=200p  ITF=0.1  VTF=4  XTF=2  RB=10 )
@@ -304,7 +306,7 @@
 * ----------------------------------------------------------------
 .MODEL S8050 NPN(
 + IS=3.772E-13  XTI=1    EG=1.05  VAF=32.09
-+ BF=218        NE=2.128 ISE=51.72E-12  IKF=0.845  XTB=0.627
++ BF=218        NF=1.0   NE=2.128 ISE=51.72E-12  IKF=0.845  XTB=0.627
 + BR=5.458      NC=2     ISC=0    IKR=0
 + RC=0.248      CJC=26p  VJC=0.4   MJC=0.368   FC=0.5
 + CJE=27.3p     VJE=0.721 MJE=0.85
@@ -318,7 +320,7 @@
 * ----------------------------------------------------------------
 .MODEL S8550 PNP(
 + IS=1.176E-13  XTI=3    EG=1.170  VAF=51.25
-+ BF=178        NE=1.5   ISE=18.82E-15  IKF=3.303  XTB=1.673
++ BF=178        NF=1.0   NE=1.5   ISE=18.82E-15  IKF=3.303  XTB=1.673
 + BR=5          NC=1.5   ISC=0    IKR=0
 + RC=1          CJC=33.3p  VJC=0.651  MJC=0.389  FC=0.5
 + CJE=99.5p     VJE=0.778  MJE=0.380
@@ -810,57 +812,63 @@ DCLPL 97 5 DCLAMP
 .ENDS LM386
 
 * ----------------------------------------------------------------
-* NTE824 — Dual Low-Noise Op-Amp Preamp  (NE5532 equivalent)  DIP-8
+* NE5532 — Dual Low-Noise Op-Amp  (Texas Instruments)  DIP-8, 2 sections
 *   Avol≈100dB  GBW=10MHz  SR=9V/µs  En=5nV/√Hz  Rails=±18V
-*   Use: High-gain preamp; bringing instruments up to modular levels.
-*   Source: Boyle macro model scaled to NE5532 per-section parameters.
-*           GA/C2 set for 10MHz GBW; elevated IEE for high SR.
+*   Use: Audio mixers, output drivers, low-noise gain stages.
+*   Source: Texas Instruments NE5534-derived NE5532 macromodel.
+*           C2 is retained from the compensated TI macro model.
 * ----------------------------------------------------------------
-.SUBCKT NTE824_SEC 1 2 3 4 5
+.SUBCKT NE5532_SEC 1 2 3 4 5
 *                   IN+ IN- V+ V- OUT
 *
-C1   11 12 8.0E-12
-C2    6  7 9.0E-12
+C1   11 12 7.703E-12
+C2    6  7 23.500E-12
 DC    5 53 DX
 DE   54  5 DX
 DLP  90 91 DX
 DLN  92 90 DX
 DP    4  3 DX
 EGND 99  0 VALUE = {0.5*V(3) + 0.5*V(4)}
-FB1   7 99 VB  45.81E6
-FB2   7 99 VC -40E6
-FB3   7 99 VE  40E6
-FB4   7 99 VLP 40E6
-FB5   7 99 VLN -40E6
-GA    6  0 11 12 565.8E-6
-GCM   0  6 10 99 5.961E-9
-IEE  10  4 DC 40.0E-6
+FB1   7 99 VB  2.893E6
+FB2   7 99 VC -3E6
+FB3   7 99 VE  3E6
+FB4   7 99 VLP 3E6
+FB5   7 99 VLN -3E6
+GA    6  0 11 12 1.382E-3
+GCM   0  6 10 99 13.82E-9
+IEE  10  4 DC 133.0E-6
 HLIM 90  0 VLIM 1K
 Q1   11  2 13 QX
 Q2   12  1 14 QX
 R2    6  9 100.0E3
-RC1   3 11 2.000E3
-RC2   3 12 2.000E3
-RE1  13 10 680
-RE2  14 10 680
-REE  10 99 12.5E6
-RO1   8  5 40
-RO2   7 99 0.3
-RP    3  4 7.843E3
+RC1   3 11 723.3
+RC2   3 12 723.3
+RE1  13 10 329
+RE2  14 10 329
+REE  10 99 1.504E6
+RO1   8  5 50
+RO2   7 99 25
+RP    3  4 7.757E3
 VB    9  0 DC 0
-VC    3 53 DC 2
-VE   54  4 DC 2
+VC    3 53 DC 2.700
+VE   54  4 DC 2.700
 VLIM  7  8 DC 0
-VLP  91  0 DC 40
-VLN   0 92 DC 40
-.MODEL DX D(IS=800.0E-18 RS=1)
-.MODEL QX NPN(IS=800.0E-18 BF=250)
-.ENDS NTE824_SEC
+VLP  91  0 DC 38
+VLN   0 92 DC 38
+.MODEL DX D(IS=800.0E-18)
+.MODEL QX NPN(IS=800.0E-18 BF=132)
+.ENDS NE5532_SEC
 
-* NTE824 package wrapper — dual, shared VCC/VEE
+* NE5532 package wrapper — dual, shared VCC/VEE
+.SUBCKT NE5532 VCC VEE INA_P INA_N OUTA INB_P INB_N OUTB
+XA INA_P INA_N VCC VEE OUTA NE5532_SEC
+XB INB_P INB_N VCC VEE OUTB NE5532_SEC
+.ENDS NE5532
+
+* NTE824 — Vetco alias for NE5532, same dual package wrapper
 .SUBCKT NTE824 VCC VEE INA_P INA_N OUTA INB_P INB_N OUTB
-XA INA_P INA_N VCC VEE OUTA NTE824_SEC
-XB INB_P INB_N VCC VEE OUTB NTE824_SEC
+XA INA_P INA_N VCC VEE OUTA NE5532_SEC
+XB INB_P INB_N VCC VEE OUTB NE5532_SEC
 .ENDS NTE824
 
 * ----------------------------------------------------------------
@@ -932,6 +940,7 @@ XB INB_P INB_N VCC VEE OUTB NTE983_SEC
 *   NTE976    4 MHz     13V/µs   JFET input, high-Z
 *   LMC6482   1.5 MHz   2.7V/µs  CMOS R2R — NOT for ±12V rails!
 *   LMC6492   1.5 MHz   2.7V/µs  CMOS R2R — NOT for ±12V rails!
+*   NE5532    10 MHz    9V/µs    Low-noise dual, audio path
 *   NTE824    10 MHz    9V/µs    Low-noise dual (NE5532), audio path
 *   NTE983    3 MHz     13V/µs   JFET input, dual (TL072)
 *   LM386     300 kHz   —        Audio power amp, single-supply

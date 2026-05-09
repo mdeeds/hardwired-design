@@ -119,14 +119,18 @@ BASIC_PREFIXES = {"r", "c", "v", "i", "l", "e", "f", "g", "h"}
 def find_print_vectors(netlist: str) -> list[str]:
     """Parse .print directives and return the requested vector names.
 
-    e.g. '.print dc v(cv_in) v(cv_node) v(v_out)' → ['cv_in', 'cv_node', 'v_out']
+    Handles both voltage probes  v(node)      → 'node'
+    and current probes           i(vsource)   → 'vsource#branch'
     """
     vectors = []
     for line, _ids in preprocess_netlist(netlist):
         if line.lower().startswith(".print"):
-            # Extract v(...) and i(...) references
-            for m in re.finditer(r'[vi]\(([^)]+)\)', line, re.IGNORECASE):
-                vectors.append(m.group(1))
+            # Voltage probes: v(node)
+            for m in re.finditer(r'v\(([^)]+)\)', line, re.IGNORECASE):
+                vectors.append(m.group(1).lower())
+            # Current probes: i(vsource) → vsource#branch
+            for m in re.finditer(r'i\(([^)]+)\)', line, re.IGNORECASE):
+                vectors.append(m.group(1).lower() + '#branch')
     return vectors
 
 
@@ -344,11 +348,17 @@ def main():
     n_pts = len(sweep)
     print(f" OK ({n_pts} points)")
 
-    # Use .print vectors if available, otherwise fall back to all voltages
+    # Use .print vectors if available, otherwise fall back to all branch currents / voltages
     if print_vectors:
         output_keys = [k for k in print_vectors if k in nominal_vectors]
-    else:
-        output_keys = [k for k in nominal_vectors if k != sweep_key and "#branch" not in k]
+        if not output_keys:
+            # Name mismatch fallback — try case-insensitive
+            nv_lower = {k.lower(): k for k in nominal_vectors}
+            output_keys = [nv_lower[k.lower()] for k in print_vectors
+                           if k.lower() in nv_lower]
+    if not output_keys:
+        output_keys = [k for k in nominal_vectors
+                       if k != sweep_key and k not in ('v-sweep',)]
 
     # Step 6: One-at-a-time sweep
     # Store results: for each output vector, keep nominal + all perturbed traces
@@ -493,6 +503,10 @@ def main():
 
     summary_html_parts.append('</div><hr style="margin:30px 0;">')
     summary_html = "\n".join(summary_html_parts)
+
+    if not output_keys:
+        print("\nNo output vectors found — check .print directive or vector names.")
+        sys.exit(1)
 
     print(f"\nSaving results for {len(output_keys)} output vectors:")
 

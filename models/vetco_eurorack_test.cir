@@ -240,6 +240,11 @@ XU_LMC6492  vcc5 0
 XU_LM386    vin_aud  0  vcc9  0   vout_386   LM386
 RLOAD_386   vout_386  0  8       $ 8 Ω speaker load
 
+* --- NE5532  (dual low-noise, 10 MHz GBW) ---
+XU_NE5532   vcc vee
++           vin_aud vout_5532a vout_5532a
++           vin_aud vout_5532b vout_5532b  NE5532
+
 * --- NTE824  (NE5532-type dual low-noise, 10 MHz GBW) ---
 XU_NTE824   vcc vee
 +           vin_aud vout_824a vout_824a
@@ -258,6 +263,7 @@ XU_NTE983   vcc vee
 
 * Print op-amp/amp output voltages (should track input signals)
 .PRINT DC V(vout_741)    V(vout_358a)  V(vout_987a)  V(vout_976)
+.PRINT DC V(vout_5532a)  V(vout_824a)  V(vout_983a)  V(vout_386)
 .PRINT DC V(vout_6482a)  V(vout_6492a) V(vout_386)   V(vout_824a) V(vout_983a)
 
 * Print BJT collector voltages (Section 1 — NTE/VET parts)

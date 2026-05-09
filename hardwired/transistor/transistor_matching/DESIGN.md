@@ -175,9 +175,9 @@ The calibration targets depend on your measured sense resistor values:
 $$V_{SENSE} = I_C \times R_{SENSE,measured}$$
 
 | Source | Target IC | If RS = 10.00kΩ | If RS = 9.95kΩ | If RS = 10.05kΩ |
-| :----- | :-------- | :--------------- | :------------- | :-------------- |
-| 100µA  | 100µA     | 1.000V           | 0.995V         | 1.005V          |
-| 10µA   | 10µA      | 100.0mV          | 99.5mV         | 100.5mV         |
+| :----- | :-------- | :-------------- | :------------- | :-------------- |
+| 100µA  | 100µA     | 1.000V          | 0.995V         | 1.005V          |
+| 10µA   | 10µA      | 100.0mV         | 99.5mV         | 100.5mV         |
 
 ## 3. Test Procedures
 
