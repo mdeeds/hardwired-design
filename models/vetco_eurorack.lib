@@ -15,6 +15,7 @@
 * CROSS-REFERENCE TABLE:
 *   NTE987   → LM324  (quad low-power op-amp, DIP-14 4-section package)
 *   NTE976   → TL071-type (single JFET-input high-Z op-amp)
+*   OPA350   → OPA350 (single CMOS RRIO high-speed op-amp)
 *   NE5532   → NE5532 (dual low-noise op-amp, DIP-8 2-section package)
 *   NTE824   → NE5532 (dual low-noise op-amp, DIP-8 2-section package)
 *   NTE983   → TL072  (dual JFET-input low-noise, DIP-8 2-section package)
@@ -45,7 +46,7 @@
 *   S8550    → S8550    (PNP BJT power switching, VUPN1670 kit)
 *
 * OP-AMP USAGE:
-*   Singles  (LM741N, NTE976): XAMP1 IN+ IN- V+ V- OUT <ModelName>
+*   Singles  (LM741N, NTE976, OPA350): XAMP1 IN+ IN- V+ V- OUT <ModelName>
 *   Duals    (LM358N, NTE983, LMC6492, NE5532, NTE824):
 *     XAMP1 VCC VEE INA_P INA_N OUTA INB_P INB_N OUTB <ModelName>
 *   Quads    (NTE987, LMC6482):
@@ -648,6 +649,60 @@ VLN   0 92 DC 40
 .ENDS NTE976
 
 * ----------------------------------------------------------------
+* OPA350 — Single High-Speed Rail-to-Rail CMOS Op-Amp  (TI)
+*   Avol≈100dB  GBW=38MHz  SR=22V/µs  Rin≈10^13Ω  V+=2.7–5.5V
+*
+*   *** WARNING: NOT SUITABLE for standard ±12V Eurorack rails. ***
+*   *** Maximum supply is ±2.75V equivalent (5.5V total).       ***
+*   *** Use only in 0–5V or other low-voltage sub-sections.     ***
+*
+*   Source: Behavioral Boyle-style macromodel fit to TI OPA350
+*           datasheet parameters. TI publishes an OPA350 PSpice
+*           model, but this simplified local macro is tuned for the
+*           shared ngspice library conventions used in this repo.
+* ----------------------------------------------------------------
+.SUBCKT OPA350 1 2 3 4 5
+*               IN+ IN- V+ V- OUT
+*
+C1   11 12 2.0E-12
+C2    6  7 5.00E-12
+DC    5 53 DX
+DE   54  5 DX
+DLP  90 91 DX
+DLN  92 90 DX
+DP    4  3 DX
+EGND 99  0 VALUE = {0.5*V(3) + 0.5*V(4)}
+FB1   7 99 VB  4.409E6
+FB2   7 99 VC -20E6
+FB3   7 99 VE  20E6
+FB4   7 99 VLP 20E6
+FB5   7 99 VLN -20E6
+GA    6  0 11 12 1.194E-3
+GCM   0  6 10 99 6.31E-8
+IEE  10  4 DC 110.0E-6
+HLIM 90  0 VLIM 1K
+J1   11  2 13 JX
+J2   12  1 14 JX
+R2    6  9 100.0E3
+RD1   3 11 2.0E3
+RD2   3 12 2.0E3
+RS1  13 10 1.0E3
+RS2  14 10 1.0E3
+RSS  10 99 5.0E6
+RO1   8  5 35
+RO2   7 99 20
+RP    3  4 20.0E3
+VB    9  0 DC 0
+VC    3 53 DC 0.02
+VE   54  4 DC 0.02
+VLIM  7  8 DC 0
+VLP  91  0 DC 12
+VLN   0 92 DC 12
+.MODEL DX D(IS=800.0E-18 RS=1)
+.MODEL JX NJF(IS=12.50E-12 BETA=1.0E-3 VTO=-0.5)
+.ENDS OPA350
+
+* ----------------------------------------------------------------
 * LMC6482 — CMOS Rail-to-Rail Quad Op-Amp  (TI)  DIP-14, 4 sections
 *   Avol≈84dB  GBW=1.5MHz  SR=2.7V/µs  Rin≈1TΩ  V+=2.7–16V
 *
@@ -1149,6 +1204,7 @@ XB INB_P INB_N VCC VEE OUTB NTE983_SEC
 *   LM358N    700 kHz   0.3V/µs  Single-supply, CM to V-
 *   NTE987    1 MHz     0.5V/µs  Quad (LM324), single-supply
 *   NTE976    4 MHz     13V/µs   JFET input, high-Z
+*   OPA350    38 MHz    22V/µs   CMOS RRIO — NOT for ±12V rails!
 *   LMC6482   1.5 MHz   2.7V/µs  CMOS R2R — NOT for ±12V rails!
 *   LMC6492   1.5 MHz   2.7V/µs  CMOS R2R — NOT for ±12V rails!
 *   NE5532    10 MHz    9V/µs    Low-noise dual, audio path
