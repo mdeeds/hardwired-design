@@ -1,0 +1,58 @@
+* Precision Sawtooth Oscillator Core with Active BJT Reset
+.title Sawtooth relaxation oscillator with LM358, LM393 and BC337
+
+.lib "../../../models/vetco_eurorack.lib"
+
+* Power Supplies
+VCC vcc 0 DC 12
+VEE vee 0 DC -12
+
+* Input Voltage control referenced to VEE (targeting ~1kHz oscillation)
+* V_IN = 8.5mV above VEE gives ~120uA current to charge 10nF over 12V swing in 1ms
+V_IN vin_ctrl vee DC 8.5m
+
+* --- Precision VCCS Current Source (referenced to VEE) ---
+* Pinout of LM358N_SEC: IN+ IN- V+ V- OUT
+XU1 vin_ctrl v_emit vcc vee v_base LM358N_SEC
+Q1 v_ramp v_base v_emit BC337
+R_SET v_emit vee 50
+
+* --- Integrator Capacitor ---
+C1 v_ramp 0 0.01u
+
+* --- Schmitt Trigger Comparator (LM393) ---
+* Pinout of LM393_SEC: IN+ IN- V+ V- OUT
+XU2 v_comp_in+ v_ramp vcc vee v_comp_out LM393_SEC
+
+* Schmitt Hysteresis Resistors for +/-6V Trigger Points
+R_FB1 v_comp_out v_comp_in+ 10k
+R_FB2 v_comp_in+ 0 10k
+R_PULLUP vcc v_comp_out 2.2k
+
+* --- High-Speed Active Reset Switch ---
+R_LIMIT vcc vcc_lim 220
+Q_RESET vcc_lim v_base_reset v_ramp BC337
+R_RESET v_comp_out v_base_reset 4.7k
+
+* --- High-Fidelity Open-Collector Comparator Model ---
+.SUBCKT LM393_SEC 1 2 3 4 5
+* Pins: IN+ IN- VCC VEE OUT
+Q1 6 2 8 QPNP
+Q2 7 1 8 QPNP
+R1 6 4 10k
+R2 7 4 10k
+C_INT1 6 4 1p
+C_INT2 7 4 1p
+I1 3 8 DC 100u
+G1 4 10 7 6 10m
+R3 10 4 1Meg
+C_INT3 10 4 1p
+Q3 5 10 4 QNPN
+.model QPNP pnp(bf=100)
+.model QNPN npn(bf=100)
+.ends LM393_SEC
+
+* --- Simulation Command ---
+.tran 1u 10m 0 0.1u
+
+.end
