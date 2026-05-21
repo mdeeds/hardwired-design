@@ -13,7 +13,7 @@ V_IN vin_ctrl vee DC 8.5m
 
 * --- Precision VCCS Current Source (referenced to VEE) ---
 * Pinout of LM358N_SEC: IN+ IN- V+ V- OUT
-XU1 vin_ctrl v_emit vcc vee v_base LM358N_SEC footprint="Package_SO:SOIC-8_3.9x4.9mm_P1.27mm"
+XU1 vin_ctrl v_emit vcc vee v_base LM358N_SEC
 Q1 v_ramp v_base v_emit BC337
 R_SET v_emit vee 50
 
@@ -22,12 +22,12 @@ C1 v_ramp 0 0.01u
 
 * --- Schmitt Trigger Comparator (LM393) ---
 * Pinout of LM393_SEC: IN+ IN- V+ V- OUT
-XU2 v_comp_in+ v_ramp vcc vee v_comp_out LM393_SEC footprint="Package_SO:SOIC-8_3.9x4.9mm_P1.27mm"
+XU2 v_comp_in+ v_ramp vcc vee v_comp_out LM393_SEC
 
 * Schmitt Hysteresis Resistors for +/-6V Trigger Points
 R_FB1 v_comp_out v_comp_in+ 10k
 R_FB2 v_comp_in+ 0 10k
-R_PULLUP vcc v_comp_out 22k
+R_PULLUP vcc v_comp_out 2.2k
 
 * --- High-Speed Active Reset Switch ---
 R_LIMIT vcc vcc_lim 220
@@ -54,6 +54,7 @@ Q3 5 10 4 QNPN
 
 * --- Simulation Command ---
 .tran 1u 10m 0 1u
-.options savecurrents
 
 .end
+
+.options savecurrents

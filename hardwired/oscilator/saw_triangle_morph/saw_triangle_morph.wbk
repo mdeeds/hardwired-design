@@ -22,30 +22,15 @@
       "showGrid": true,
       "traces": [
         {
-          "color": "rgb(102, 194, 165)",
-          "signal": "V(/SQ)",
+          "color": "rgb(228, 26, 28)",
+          "signal": "V(/CAP)",
           "trace_type": 257
         },
         {
-          "color": "rgb(252, 141, 98)",
-          "signal": "V(/TRI)",
-          "trace_type": 257
-        },
-        {
-          "color": "rgb(255, 255, 51)",
-          "signal": "V(/VGND)",
+          "color": "rgb(55, 126, 184)",
+          "signal": "V(/THRESH)",
           "trace_type": 257
         }
-      ]
-    },
-    {
-      "analysis": "OP",
-      "commands": [
-        ".op",
-        ".kicad adjustpaths",
-        ".save all",
-        ".probe alli",
-        ".probe allp"
       ]
     }
   ],

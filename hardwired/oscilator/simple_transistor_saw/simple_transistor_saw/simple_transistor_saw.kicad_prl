@@ -63,7 +63,7 @@
     "ssh_key": ""
   },
   "meta": {
-    "filename": "ab_amplifier_ground.kicad_prl",
+    "filename": "simple_transistor_saw.kicad_prl",
     "version": 5
   },
   "net_inspector_panel": {

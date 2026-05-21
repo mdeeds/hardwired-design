@@ -22,18 +22,23 @@
       "showGrid": true,
       "traces": [
         {
-          "color": "rgb(102, 194, 165)",
-          "signal": "V(/SQ)",
-          "trace_type": 257
-        },
-        {
-          "color": "rgb(252, 141, 98)",
-          "signal": "V(/TRI)",
+          "color": "rgb(55, 126, 184)",
+          "signal": "V(/CAP)",
           "trace_type": 257
         },
         {
           "color": "rgb(255, 255, 51)",
-          "signal": "V(/VGND)",
+          "signal": "V(/SINK)",
+          "trace_type": 257
+        },
+        {
+          "color": "rgb(228, 26, 28)",
+          "signal": "V(/THRESH)",
+          "trace_type": 257
+        },
+        {
+          "color": "rgb(255, 127, 0)",
+          "signal": "V(/U2_OUT)",
           "trace_type": 257
         }
       ]

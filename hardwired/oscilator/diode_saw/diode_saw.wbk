@@ -5,7 +5,7 @@
     {
       "analysis": "TRAN",
       "commands": [
-        ".tran 1u 10m",
+        ".tran 500n 10m",
         ".kicad adjustpaths",
         ".save all",
         ".probe alli",
@@ -22,18 +22,23 @@
       "showGrid": true,
       "traces": [
         {
+          "color": "rgb(228, 26, 28)",
+          "signal": "V(+12V)",
+          "trace_type": 257
+        },
+        {
+          "color": "rgb(55, 126, 184)",
+          "signal": "V(-12V)",
+          "trace_type": 257
+        },
+        {
           "color": "rgb(102, 194, 165)",
-          "signal": "V(/SQ)",
+          "signal": "V(Net-_D1-A_)",
           "trace_type": 257
         },
         {
           "color": "rgb(252, 141, 98)",
-          "signal": "V(/TRI)",
-          "trace_type": 257
-        },
-        {
-          "color": "rgb(255, 255, 51)",
-          "signal": "V(/VGND)",
+          "signal": "V(Net-_Q1-E_)",
           "trace_type": 257
         }
       ]

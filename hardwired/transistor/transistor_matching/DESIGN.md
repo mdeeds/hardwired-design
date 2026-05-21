@@ -341,3 +341,43 @@ Your DMM readings should be within ±10mV of these values (exact IS varies unit-
 - **Supply voltage**: The exact voltage doesn't matter much — anything from 20V to 35V works. Higher voltage means even better current-source behavior. Just re-calibrate the trim pots if V+ changes.
 - **One source per DUT**: Never connect both sources to the same transistor simultaneously. The currents add, giving 110µA instead of the expected single-source value.
 - **Same session**: Always compare transistors in the same measurement session. VBE drifts with ambient temperature, so a reading from Monday cannot be compared to one from Tuesday.
+
+## 7. Footprint & Package Allocations
+
+Below are the physical footprints and package mapping specifications assigned to the transistor matching fixture netlist components, following our standard through-hole technology (THT) design parameters.
+
+### 7.1 Footprint Allocation Table
+
+| Designator | Component Name | Physical Package | Assigned KiCad Footprint | Footprint Pins | SPICE Node Connections | Purpose & Sourcing Notes |
+| :--- | :--- | :--- | :--- | :---: | :--- | :--- |
+| **V1** | 30V Bench Supply Input | 1x02 Header | `Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical` | `1`<br>`2` | `vcc` (+30V)<br>`0` (GND) | Bench power supply connector. |
+| **R1** | 270kΩ Resistor | Axial THT | `Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P2.54mm_Vertical` | `1`<br>`2` | `vcc`<br>`n1` | 100µA current source resistor. |
+| **RV1** | 50kΩ Trim Pot | 3-pin Header/Trimpot | `Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical` | `1`<br>`2`<br>`3` | `n1`<br>`a1`<br>`a1` (shorted) | 100µA calibration trim pot (Bourns 3362P style). Wiper shorted to Pin 3 for safety. |
+| **RS1** | 10kΩ ±1% Resistor | Axial THT | `Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P2.54mm_Vertical` | `1`<br>`2` | `a1`<br>`b1` | 100µA current-sense resistor. |
+| **Q1** | 2SC1815 NPN | TO-92 | `Package_TO_SOT_THT:TO-92_Inline` | `1`<br>`2`<br>`3` | `0` (Emitter)<br>`b1` (Collector)<br>`b1` (Base) | Transistor under test (diode-connected via C-B jumper). ECB pinout. |
+| **R2** | 2.7MΩ Resistor | Axial THT | `Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P2.54mm_Vertical` | `1`<br>`2` | `vcc`<br>`n2` | 10µA current source resistor. |
+| **RV2** | 500kΩ Trim Pot | 3-pin Header/Trimpot | `Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical` | `1`<br>`2`<br>`3` | `n2`<br>`a2`<br>`a2` (shorted) | 10µA calibration trim pot (Bourns 3362P style). Wiper shorted to Pin 3 for safety. |
+| **RS2** | 10kΩ ±1% Resistor | Axial THT | `Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P2.54mm_Vertical` | `1`<br>`2` | `a2`<br>`b2` | 10µA current-sense resistor. |
+| **Q2** | 2SC1815 NPN | TO-92 | `Package_TO_SOT_THT:TO-92_Inline` | `1`<br>`2`<br>`3` | `0` (Emitter)<br>`b2` (Collector)<br>`b2` (Base) | Transistor under test (diode-connected via C-B jumper). ECB pinout. |
+
+### 7.2 Detailed Pin-to-Port Remapping (TO-92 to SPICE NPN)
+
+The 2SC1815 transistor in a TO-92 package has an **ECB** (Emitter-Collector-Base) physical pinout. SPICE, however, expects ports in **CBE** (Collector-Base-Emitter) sequence. Below is the precise electrical remapping for `Q1` and `Q2`:
+
+```
+   Physical TO-92 Pinout:           SPICE Netlist Instance:
+      ┌─────────┐
+      │ C1815   │                      Q1 <Collector> <Base> <Emitter> NPN_C1815
+      │ TO-92   │                      Q1 b1          b1     0         NPN_C1815
+      └─┬─┬─┬───┘
+        │ │ │
+        1 2 3
+        │ │ │
+        │ │ └─► Pin 3 (Base)      ──► SPICE Base Node (b1)
+        │ └───► Pin 2 (Collector) ──► SPICE Collector Node (b1)
+        └─────► Pin 1 (Emitter)   ──► SPICE Emitter Node (0 / GND)
+```
+
+## 8. Audit Trail
+
+*   **2026-05-20**: Assigned physical footprints and packages to all components in the transistor matching fixture netlist based on the standard and fallback catalogs. Added `## Footprint & Package Allocations` and `## Audit Trail` sections to `DESIGN.md`.
