@@ -34,23 +34,6 @@ R_LIMIT vcc vcc_lim 220
 Q_RESET vcc_lim v_base_reset v_ramp BC337
 R_RESET v_comp_out v_base_reset 4.7k
 
-* --- High-Fidelity Open-Collector Comparator Model ---
-.SUBCKT LM393_SEC 1 2 3 4 5
-* Pins: IN+ IN- VCC VEE OUT
-Q1 6 2 8 QPNP
-Q2 7 1 8 QPNP
-R1 6 4 10k
-R2 7 4 10k
-C_INT1 6 4 1p
-C_INT2 7 4 1p
-I1 3 8 DC 100u
-G1 4 10 7 6 10m
-R3 10 4 1Meg
-C_INT3 10 4 1p
-Q3 5 10 4 QNPN
-.model QPNP pnp(bf=100)
-.model QNPN npn(bf=100)
-.ends LM393_SEC
 
 * --- Simulation Command ---
 .tran 1u 10m 0 1u

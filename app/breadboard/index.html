@@ -1,0 +1,1466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Breadboard Layout</title>
+<style>
+  /* --- Reset & Base --- */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #1a1a2e;
+    --bg-surface: #16213e;
+    --bg-board: #e8e4d4;
+    --text: #e0e0e0;
+    --text-muted: #8888aa;
+    --accent: #0f3460;
+    --hole: #333;
+    --hole-border: #555;
+    --pin-grey: #aaa;
+    --pin-highlight: #f0c040;
+    --pin-conflict: #ff2020;
+    --pin-disconnected: #3060cc;
+    --wire-color: #40a0ff;
+    --bridge-color: #ff8040;
+    --power-rail: #c44;
+    --ground-rail: #28a;
+    --board-stripe: #d4d0c0;
+    --board-center-gap: #c8c4b0;
+    --toolbar-bg: #0f3460;
+    --toolbar-hover: #1a4a7a;
+    --font-mono: 'Consolas', 'Fira Code', 'Source Code Pro', monospace;
+    --font-sans: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* --- Header --- */
+  header {
+    background: linear-gradient(135deg, var(--accent), #1a1a3e);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-bottom: 1px solid #333;
+    flex-shrink: 0;
+  }
+  header h1 {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  header .subtitle {
+    color: var(--text-muted);
+    font-size: 12px;
+    font-family: var(--font-mono);
+  }
+
+  /* --- Toolbar --- */
+  .toolbar {
+    background: var(--toolbar-bg);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 12px;
+    flex-shrink: 0;
+    border-bottom: 1px solid #222;
+  }
+  .toolbar button {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .toolbar button:hover {
+    background: var(--toolbar-hover);
+    border-color: #335;
+  }
+  .toolbar button.active {
+    background: #264a7a;
+    border-color: #5588cc;
+  }
+  .toolbar .sep {
+    width: 1px;
+    height: 24px;
+    background: #335;
+    margin: 0 6px;
+  }
+  .toolbar .status {
+    margin-left: auto;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+  }
+
+  /* --- Canvas container --- */
+  .canvas-wrap {
+    flex: 1;
+    overflow: auto;
+    position: relative;
+    background: var(--bg);
+  }
+  canvas {
+    display: block;
+    cursor: default;
+  }
+
+  /* --- Tooltip --- */
+  #tooltip {
+    position: absolute;
+    pointer-events: none;
+    background: rgba(10, 10, 30, 0.92);
+    color: #eee;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-family: var(--font-mono);
+    border: 1px solid #446;
+    z-index: 100;
+    display: none;
+    white-space: pre;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  }
+
+  /* --- Legend --- */
+  .legend {
+    position: fixed;
+    bottom: 12px;
+    right: 12px;
+    background: rgba(15, 20, 40, 0.9);
+    border: 1px solid #335;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 11px;
+    z-index: 50;
+    line-height: 1.8;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .legend-swatch {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>⚡ Breadboard Layout</h1>
+  <span class="subtitle" id="circuit-title">Loading...</span>
+</header>
+
+<div class="toolbar">
+  <button id="btn-select" class="active" title="Select / Inspect mode">🔍 Inspect</button>
+  <button id="btn-move" title="Drag components to reposition">✋ Move</button>
+  <button id="btn-wire" title="Draw horizontal wires">🔌 Wire</button>
+  <button id="btn-bridge" title="Add bridge wires between rows">🌉 Bridge</button>
+  <div class="sep"></div>
+  <button id="btn-delete" title="Delete wire/bridge under cursor">🗑️ Delete</button>
+  <div class="sep"></div>
+  <button id="btn-save" title="Save layout to .bb file">💾 Save</button>
+  <button id="btn-load" title="Reload layout from .bb file">📂 Reload</button>
+  <div class="sep"></div>
+  <span class="status" id="status-bar">Ready</span>
+</div>
+
+<div class="canvas-wrap" id="canvas-wrap">
+  <canvas id="board"></canvas>
+  <div id="tooltip"></div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-swatch" style="background:#aaa"></div> Connected (grey)</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#3060cc"></div> Disconnected (blue)</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#ff2020"></div> Conflict (red)</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#f0c040"></div> Highlighted net</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#40a0ff"></div> Wire</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#ff8040"></div> Bridge</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#8f8"></div> Dragging</div>
+</div>
+
+<script>
+// ==========================================================================
+// Breadboard Visualization
+// ==========================================================================
+
+const CELL = 20;          // Size of each grid cell
+const HOLE_R = 4;         // Hole radius
+const PIN_R = 3;          // Pin radius in hole
+const PAD_LEFT = 60;      // Left padding for labels
+const PAD_TOP = 60;       // Top padding
+const ROW_GAP = 10;       // Gap between top-5 and bottom-5 row groups
+const COMPONENT_GAP = 1;  // Gap columns between components
+const POWER_NETS = new Set(['vcc', 'vee', 'gnd', '0']);
+
+// Board layout:
+//   Row 0 = top power rail (+)
+//   Row 1 = top power rail (-)
+//   Rows 2-6 = top 5-hole rows (a-e)
+//   [center gap]
+//   Rows 7-11 = bottom 5-hole rows (f-j)
+//   Row 12 = bottom power rail (+)
+//   Row 13 = bottom power rail (-)
+
+const ROW_LABELS = ['+', '−', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', '+', '−'];
+const TOTAL_ROWS = 14;
+const TOP_BUS_ROWS = [2, 3, 4, 5, 6];      // rows a-e
+const BOTTOM_BUS_ROWS = [7, 8, 9, 10, 11]; // rows f-j
+const TOP_POWER = [0, 1];
+const BOTTOM_POWER = [12, 13];
+const ALL_SIGNAL_ROWS = [...TOP_BUS_ROWS, ...BOTTOM_BUS_ROWS];
+
+// State
+let netlistData = null;
+let layoutData = { wires: [], bridges: [], component_positions: {} };
+let totalCols = 50;  // Fixed at 50 columns
+let mode = 'select'; // 'select', 'move', 'wire', 'bridge', 'delete'
+let hoveredHole = null;  // {col, row}
+let hoveredNet = null;
+let wireStart = null;    // {col, row} for wire drawing
+let highlights = new Map(); // col -> Set of rows that are highlighted
+
+// Drag state
+let dragComp = null;      // The component being dragged
+let dragOffset = 0;       // Column offset from mouse to component origin
+let dragGhostCol = null;  // Current ghost position column during drag
+
+// Components placed on the board with their column positions
+let placedComponents = [];
+// Map from (col, row) -> { component, pinIndex, netName }
+let pinMap = new Map();
+// Map from col -> Set of net names on that vertical bus
+let busNets = new Map();
+// Connectivity: which columns are connected via wires/bridges
+let connectivity = new Map(); // net -> Set of cols connected
+
+const canvas = document.getElementById('board');
+const ctx = canvas.getContext('2d');
+const tooltip = document.getElementById('tooltip');
+const canvasWrap = document.getElementById('canvas-wrap');
+
+// ==========================================================================
+// Data Loading
+// ==========================================================================
+
+async function loadData() {
+  try {
+    const [netResp, layoutResp] = await Promise.all([
+      fetch('/api/netlist'),
+      fetch('/api/layout'),
+    ]);
+    netlistData = await netResp.json();
+    layoutData = await layoutResp.json();
+
+    document.getElementById('circuit-title').textContent =
+      netlistData.title || 'Untitled Circuit';
+
+    placeComponents();
+    buildPinMap();
+    computeConnectivity();
+    resizeCanvas();
+    draw();
+    setStatus(`Loaded ${netlistData.components.length} components, ${Object.keys(netlistData.nets).length} nets`);
+  } catch (e) {
+    console.error('Failed to load data:', e);
+    setStatus('Error loading data');
+  }
+}
+
+function placeComponents() {
+  placedComponents = [];
+
+  // Separate components by type for placement
+  const ics = [];
+  const small = []; // 2pin and 3pin
+
+  for (const comp of netlistData.components) {
+    if (comp.type === 'ic') {
+      ics.push(comp);
+    } else {
+      small.push(comp);
+    }
+  }
+
+  // --- Place ICs straddling the center gap ---
+  // ICs go at the center gap (rows e/f = rows 6/7)
+  let icCol = 1;
+  for (const comp of ics) {
+    const savedCol = layoutData.component_positions?.[comp.name];
+    const startCol = savedCol != null ? savedCol : icCol;
+
+    placedComponents.push({
+      ...comp,
+      col: startCol,
+      pinCols: [startCol, startCol+1, startCol+2, startCol+3,
+                startCol+3, startCol+2, startCol+1, startCol],
+      pinRows: [6, 6, 6, 6, 7, 7, 7, 7],
+      section: 'both',
+    });
+    if (savedCol == null) icCol = startCol + 4 + COMPONENT_GAP + 1;
+  }
+
+  // --- Place small components in available rows ---
+  // Use multiple rows to fit within 50 columns.
+  // We'll assign components to rows (top section rows a-d = rows 2-5).
+  // Row 'e' (6) is reserved for IC top pins.
+  // Row 'f' (7) is reserved for IC bottom pins.
+  // So use rows a(2), b(3), c(4), d(5), and also bottom rows g(8), h(9), i(10), j(11).
+
+  // Available placement rows for small components
+  const placementRows = [3, 4, 8, 9]; // rows b, c, h, i
+  let currentRowIdx = 0;
+  let col = 1;
+
+  for (const comp of small) {
+    const savedCol = layoutData.component_positions?.[comp.name];
+
+    if (comp.type === '2pin') {
+      const neededWidth = 5; // 2-pin spans 5 holes
+      const startCol = savedCol != null ? savedCol : col;
+
+      // Determine placement row
+      let placementRow;
+      if (savedCol != null) {
+        // Saved position - look for saved row too, default to row b(3)
+        placementRow = layoutData.component_rows?.[comp.name] ?? placementRows[currentRowIdx % placementRows.length];
+      } else {
+        // Check if we need to wrap to next row
+        if (col + neededWidth > totalCols - 1) {
+          currentRowIdx++;
+          col = 1;
+        }
+        placementRow = placementRows[currentRowIdx % placementRows.length];
+      }
+
+      placedComponents.push({
+        ...comp,
+        col: startCol,
+        pinCols: [startCol, startCol + 4],
+        pinRows: [placementRow, placementRow],
+        section: TOP_BUS_ROWS.includes(placementRow) ? 'top' : 'bottom',
+        placementRow: placementRow,
+      });
+      if (savedCol == null) col = startCol + neededWidth + COMPONENT_GAP;
+
+    } else if (comp.type === '3pin') {
+      const neededWidth = 3;
+      const startCol = savedCol != null ? savedCol : col;
+
+      let placementRow;
+      if (savedCol != null) {
+        placementRow = layoutData.component_rows?.[comp.name] ?? placementRows[currentRowIdx % placementRows.length];
+      } else {
+        if (col + neededWidth > totalCols - 1) {
+          currentRowIdx++;
+          col = 1;
+        }
+        placementRow = placementRows[currentRowIdx % placementRows.length];
+      }
+
+      placedComponents.push({
+        ...comp,
+        col: startCol,
+        pinCols: [startCol, startCol + 1, startCol + 2],
+        pinRows: [placementRow, placementRow, placementRow],
+        section: TOP_BUS_ROWS.includes(placementRow) ? 'top' : 'bottom',
+        placementRow: placementRow,
+      });
+      if (savedCol == null) col = startCol + neededWidth + COMPONENT_GAP;
+    }
+  }
+}
+
+// Recompute pinCols/pinRows for a component after its col changes
+function recomputeComponentPins(comp) {
+  const c = comp.col;
+  if (comp.type === '2pin') {
+    comp.pinCols = [c, c + 4];
+    const r = comp.placementRow ?? comp.pinRows[0];
+    comp.pinRows = [r, r];
+  } else if (comp.type === '3pin') {
+    comp.pinCols = [c, c + 1, c + 2];
+    const r = comp.placementRow ?? comp.pinRows[0];
+    comp.pinRows = [r, r, r];
+  } else if (comp.type === 'ic') {
+    comp.pinCols = [c, c+1, c+2, c+3, c+3, c+2, c+1, c];
+    comp.pinRows = [6, 6, 6, 6, 7, 7, 7, 7];
+  }
+}
+
+function pinKey(col, row) {
+  return `${col},${row}`;
+}
+
+function buildPinMap() {
+  pinMap.clear();
+  busNets.clear();
+
+  for (const comp of placedComponents) {
+    for (let i = 0; i < comp.pins.length; i++) {
+      const netName = comp.pins[i].toLowerCase();
+      if (netName === 'nc') continue;
+      const c = comp.pinCols[i];
+      const r = comp.pinRows[i];
+
+      pinMap.set(pinKey(c, r), {
+        component: comp.name,
+        pinIndex: i,
+        pinLabel: comp.pin_labels[i],
+        netName: netName,
+        compType: comp.type,
+        compValue: comp.value,
+      });
+
+      // Track nets per vertical bus (column)
+      if (!busNets.has(c)) busNets.set(c, new Set());
+      busNets.get(c).add(netName);
+    }
+  }
+}
+
+function computeConnectivity() {
+  // Build a graph of which columns are connected for each net
+  connectivity.clear();
+
+  const netCols = new Map();
+  for (const comp of placedComponents) {
+    for (let i = 0; i < comp.pins.length; i++) {
+      const net = comp.pins[i].toLowerCase();
+      if (net === 'nc') continue;
+      const c = comp.pinCols[i];
+      const r = comp.pinRows[i];
+      const section = TOP_BUS_ROWS.includes(r) ? 'top' : 'bottom';
+
+      if (!netCols.has(net)) netCols.set(net, new Set());
+      netCols.get(net).add(`${c}:${section}`);
+    }
+  }
+
+  // Union-find
+  const parent = new Map();
+  function find(x) {
+    if (!parent.has(x)) parent.set(x, x);
+    if (parent.get(x) !== x) parent.set(x, find(parent.get(x)));
+    return parent.get(x);
+  }
+  function union(a, b) {
+    const ra = find(a), rb = find(b);
+    if (ra !== rb) parent.set(ra, rb);
+  }
+
+  // Wires connect columns in same section
+  for (const wire of layoutData.wires) {
+    const section = TOP_BUS_ROWS.includes(wire.row) ? 'top' : 'bottom';
+    for (let c = Math.min(wire.col1, wire.col2); c < Math.max(wire.col1, wire.col2); c++) {
+      union(`${c}:${section}`, `${c+1}:${section}`);
+    }
+  }
+
+  // Bridges connect top and bottom of same column
+  for (const bridge of layoutData.bridges) {
+    union(`${bridge.col}:top`, `${bridge.col}:bottom`);
+  }
+
+  // Power nets: all their occurrences are connected
+  for (const pnet of POWER_NETS) {
+    if (netCols.has(pnet)) {
+      const locs = [...netCols.get(pnet)];
+      for (let i = 1; i < locs.length; i++) {
+        union(locs[0], locs[i]);
+      }
+    }
+  }
+
+  // Determine connectivity status for each net
+  for (const [net, locs] of netCols) {
+    const locArr = [...locs];
+    if (POWER_NETS.has(net)) {
+      connectivity.set(net, 'connected');
+      continue;
+    }
+    if (locArr.length <= 1) {
+      connectivity.set(net, 'connected');
+      continue;
+    }
+    const root = find(locArr[0]);
+    let allConnected = true;
+    for (let i = 1; i < locArr.length; i++) {
+      if (find(locArr[i]) !== root) {
+        allConnected = false;
+        break;
+      }
+    }
+    connectivity.set(net, allConnected ? 'connected' : 'disconnected');
+  }
+}
+
+// ==========================================================================
+// Drawing
+// ==========================================================================
+
+function resizeCanvas() {
+  const w = PAD_LEFT + totalCols * CELL + 40;
+  const h = PAD_TOP + TOTAL_ROWS * CELL + ROW_GAP + 40;
+  canvas.width = w;
+  canvas.height = h;
+}
+
+function rowY(row) {
+  if (row <= 6) {
+    return PAD_TOP + row * CELL;
+  } else {
+    return PAD_TOP + row * CELL + ROW_GAP;
+  }
+}
+
+function colX(col) {
+  return PAD_LEFT + col * CELL;
+}
+
+function draw() {
+  const w = canvas.width;
+  const h = canvas.height;
+
+  // Background
+  ctx.fillStyle = var_bg();
+  ctx.fillRect(0, 0, w, h);
+
+  // Board background
+  const boardX = PAD_LEFT - 10;
+  const boardY = PAD_TOP - 10;
+  const boardW = totalCols * CELL + 20;
+  const boardH = TOTAL_ROWS * CELL + ROW_GAP + 20;
+  ctx.fillStyle = '#e8e4d4';
+  ctx.strokeStyle = '#999';
+  ctx.lineWidth = 2;
+  roundRect(ctx, boardX, boardY, boardW, boardH, 8);
+
+  // Center gap
+  const gapY = rowY(6) + CELL / 2 + 2;
+  const gapH = ROW_GAP + CELL - 4;
+  ctx.fillStyle = '#c8c4b0';
+  ctx.fillRect(boardX + 4, gapY, boardW - 8, gapH);
+
+  // Power rail stripes
+  drawPowerStripes(boardX, boardW);
+
+  // Row labels
+  ctx.font = '11px ' + getComputedStyle(document.body).getPropertyValue('--font-mono');
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'middle';
+  for (let r = 0; r < TOTAL_ROWS; r++) {
+    const y = rowY(r);
+    ctx.fillStyle = TOP_POWER.includes(r) || BOTTOM_POWER.includes(r) ? '#888' : '#666';
+    ctx.fillText(ROW_LABELS[r], PAD_LEFT - 16, y);
+  }
+
+  // Column numbers
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'bottom';
+  ctx.fillStyle = '#888';
+  for (let c = 0; c < totalCols; c += 5) {
+    ctx.fillText(String(c + 1), colX(c), PAD_TOP - 14);
+  }
+
+  // Draw holes
+  for (let r = 0; r < TOTAL_ROWS; r++) {
+    for (let c = 0; c < totalCols; c++) {
+      drawHole(c, r);
+    }
+  }
+
+  // Draw wires
+  for (const wire of layoutData.wires) {
+    drawWire(wire);
+  }
+
+  // Draw bridges
+  for (const bridge of layoutData.bridges) {
+    drawBridge(bridge);
+  }
+
+  // Draw components (skip the one being dragged - it's drawn as a ghost)
+  for (const comp of placedComponents) {
+    if (comp === dragComp) continue;
+    drawComponent(comp);
+  }
+
+  // Draw pins (on top of everything, skip dragged component)
+  for (const comp of placedComponents) {
+    if (comp === dragComp) continue;
+    drawPins(comp);
+  }
+
+  // Draw drag ghost
+  if (dragComp && dragGhostCol != null) {
+    drawDragGhost(dragComp, dragGhostCol);
+  }
+
+  // Wire being drawn
+  if (wireStart && hoveredHole) {
+    ctx.strokeStyle = mode === 'bridge' ? '#ff804080' : '#40a0ff80';
+    ctx.lineWidth = 3;
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(colX(wireStart.col), rowY(wireStart.row));
+    ctx.lineTo(colX(hoveredHole.col), rowY(hoveredHole.row));
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+}
+
+function var_bg() { return '#1a1a2e'; }
+
+function drawPowerStripes(boardX, boardW) {
+  // Top power rails
+  for (const r of TOP_POWER) {
+    const y = rowY(r) - CELL / 2 + 2;
+    ctx.fillStyle = r === 0 ? '#e8d4d4' : '#d4e0e8';
+    ctx.fillRect(boardX + 4, y, boardW - 8, CELL - 4);
+  }
+  // Bottom power rails
+  for (const r of BOTTOM_POWER) {
+    const y = rowY(r) - CELL / 2 + 2;
+    ctx.fillStyle = r === 12 ? '#e8d4d4' : '#d4e0e8';
+    ctx.fillRect(boardX + 4, y, boardW - 8, CELL - 4);
+  }
+}
+
+function drawHole(col, row) {
+  const x = colX(col);
+  const y = rowY(row);
+  const isHovered = hoveredHole && hoveredHole.col === col && hoveredHole.row === row;
+
+  ctx.beginPath();
+  ctx.arc(x, y, HOLE_R, 0, Math.PI * 2);
+  ctx.fillStyle = isHovered ? '#555' : '#333';
+  ctx.fill();
+  ctx.strokeStyle = '#666';
+  ctx.lineWidth = 0.5;
+  ctx.stroke();
+}
+
+function drawComponent(comp) {
+  if (comp.type === '2pin') {
+    drawTwoPin(comp);
+  } else if (comp.type === '3pin') {
+    drawThreePin(comp);
+  } else if (comp.type === 'ic') {
+    drawIC(comp);
+  }
+}
+
+function drawTwoPin(comp) {
+  const x1 = colX(comp.pinCols[0]);
+  const x2 = colX(comp.pinCols[1]);
+  const y = rowY(comp.pinRows[0]);
+
+  // Component body
+  const bodyX = x1 + CELL * 0.8;
+  const bodyW = x2 - x1 - CELL * 1.6;
+  const bodyH = CELL * 0.7;
+
+  // Lead wires
+  ctx.strokeStyle = '#888';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(x1, y);
+  ctx.lineTo(bodyX, y);
+  ctx.moveTo(bodyX + bodyW, y);
+  ctx.lineTo(x2, y);
+  ctx.stroke();
+
+  // Body
+  const prefix = comp.prefix;
+  let bodyColor;
+  if (prefix === 'R') bodyColor = '#aa8866';
+  else if (prefix === 'C') bodyColor = '#6688aa';
+  else if (prefix === 'L') bodyColor = '#88aa66';
+  else if (prefix === 'D') bodyColor = '#aa6688';
+  else if (prefix === 'V' || prefix === 'I') bodyColor = '#8866aa';
+  else bodyColor = '#888';
+
+  ctx.fillStyle = bodyColor;
+  ctx.strokeStyle = '#555';
+  ctx.lineWidth = 1;
+  roundRect(ctx, bodyX, y - bodyH / 2, bodyW, bodyH, 3);
+
+  // Label
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 9px ' + getComputedStyle(document.body).getPropertyValue('--font-mono');
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(comp.name, (x1 + x2) / 2, y - 1);
+  if (comp.value) {
+    ctx.font = '8px ' + getComputedStyle(document.body).getPropertyValue('--font-mono');
+    ctx.fillStyle = '#ddd';
+    ctx.fillText(comp.value, (x1 + x2) / 2, y + 8);
+  }
+}
+
+function drawThreePin(comp) {
+  const y = rowY(comp.pinRows[0]);
+
+  // Body (small rectangle spanning the 3 pins)
+  const x1 = colX(comp.pinCols[0]);
+  const x3 = colX(comp.pinCols[2]);
+  const bodyX = x1 - 4;
+  const bodyW = x3 - x1 + 8;
+  const bodyH = CELL * 0.9;
+
+  // Draw a D-shaped body for transistors
+  ctx.fillStyle = comp.prefix === 'Q' || comp.prefix === 'J' || comp.prefix === 'M'
+    ? '#556677' : '#667755';
+  ctx.strokeStyle = '#444';
+  ctx.lineWidth = 1;
+
+  ctx.beginPath();
+  ctx.moveTo(bodyX, y - bodyH / 2);
+  ctx.lineTo(bodyX + bodyW, y - bodyH / 2);
+  ctx.arc(bodyX + bodyW, y, bodyH / 2, -Math.PI / 2, Math.PI / 2);
+  ctx.lineTo(bodyX, y + bodyH / 2);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  // Label
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 9px ' + getComputedStyle(document.body).getPropertyValue('--font-mono');
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(comp.name, (x1 + x3) / 2, y - 1);
+  if (comp.value) {
+    ctx.font = '7px ' + getComputedStyle(document.body).getPropertyValue('--font-mono');
+    ctx.fillStyle = '#ccc';
+    ctx.fillText(comp.value, (x1 + x3) / 2, y + 8);
+  }
+}
+
+function drawIC(comp) {
+  const leftCol = comp.col;
+  const rightCol = comp.col + 3;
+  const x1 = colX(leftCol) - 6;
+  const x2 = colX(rightCol) + 6;
+  const y1 = rowY(6) - CELL * 0.4;
+  const y2 = rowY(7) + CELL * 0.4;
+
+  // Body
+  ctx.fillStyle = '#2a2a2a';
+  ctx.strokeStyle = '#555';
+  ctx.lineWidth = 1.5;
+  roundRect(ctx, x1, y1, x2 - x1, y2 - y1, 4);
+
+  // Notch
+  ctx.beginPath();
+  ctx.arc(x1, (y1 + y2) / 2, 4, -Math.PI / 2, Math.PI / 2);
+  ctx.fillStyle = '#444';
+  ctx.fill();
+
+  // Pin 1 dot
+  ctx.beginPath();
+  ctx.arc(x1 + 8, y1 + 8, 2, 0, Math.PI * 2);
+  ctx.fillStyle = '#888';
+  ctx.fill();
+
+  // Label
+  ctx.fillStyle = '#ccc';
+  ctx.font = 'bold 9px ' + getComputedStyle(document.body).getPropertyValue('--font-mono');
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(comp.name, (x1 + x2) / 2, (y1 + y2) / 2 - 4);
+  if (comp.value) {
+    ctx.font = '7px ' + getComputedStyle(document.body).getPropertyValue('--font-mono');
+    ctx.fillStyle = '#999';
+    ctx.fillText(comp.value, (x1 + x2) / 2, (y1 + y2) / 2 + 6);
+  }
+}
+
+function drawPins(comp) {
+  for (let i = 0; i < comp.pins.length; i++) {
+    const net = comp.pins[i].toLowerCase();
+    if (net === 'nc') continue;
+
+    const c = comp.pinCols[i];
+    const r = comp.pinRows[i];
+    const x = colX(c);
+    const y = rowY(r);
+
+    // Determine pin color
+    let color = getPinColor(c, r, net);
+
+    // Check if this pin is highlighted
+    if (hoveredNet && net === hoveredNet) {
+      color = '#f0c040';
+    }
+
+    ctx.beginPath();
+    ctx.arc(x, y, PIN_R, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.strokeStyle = '#222';
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+  }
+}
+
+function getPinColor(col, row, netName) {
+  // Check for bus conflict
+  const netsOnBus = busNets.get(col);
+  if (netsOnBus && netsOnBus.size > 1) {
+    const realNets = new Set([...netsOnBus].filter(n => n !== 'nc'));
+    if (realNets.size > 1) {
+      const section = TOP_BUS_ROWS.includes(row) ? TOP_BUS_ROWS : BOTTOM_BUS_ROWS;
+      const sectionNets = new Set();
+      for (const sr of section) {
+        const info = pinMap.get(pinKey(col, sr));
+        if (info && info.netName !== 'nc') {
+          sectionNets.add(info.netName);
+        }
+      }
+      if (sectionNets.size > 1) {
+        return '#ff2020'; // Conflict!
+      }
+    }
+  }
+
+  if (POWER_NETS.has(netName)) {
+    return '#aaa';
+  }
+
+  const status = connectivity.get(netName);
+  if (status === 'disconnected') {
+    return '#3060cc';
+  }
+
+  return '#aaa';
+}
+
+// ==========================================================================
+// Drag Ghost Drawing
+// ==========================================================================
+
+function drawDragGhost(comp, ghostCol) {
+  ctx.save();
+  ctx.globalAlpha = 0.6;
+
+  // Create a temporary comp copy with the ghost position
+  const ghost = { ...comp, col: ghostCol };
+  recomputeComponentPins(ghost);
+
+  // Draw ghost with green tint
+  if (ghost.type === '2pin') {
+    const x1 = colX(ghost.pinCols[0]);
+    const x2 = colX(ghost.pinCols[1]);
+    const y = rowY(ghost.pinRows[0]);
+    const bodyX = x1 + CELL * 0.8;
+    const bodyW = x2 - x1 - CELL * 1.6;
+    const bodyH = CELL * 0.7;
+
+    ctx.strokeStyle = '#8f8';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(x1, y); ctx.lineTo(bodyX, y);
+    ctx.moveTo(bodyX + bodyW, y); ctx.lineTo(x2, y);
+    ctx.stroke();
+
+    ctx.fillStyle = '#4a8';
+    ctx.strokeStyle = '#8f8';
+    ctx.lineWidth = 2;
+    roundRect(ctx, bodyX, y - bodyH / 2, bodyW, bodyH, 3);
+
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 9px ' + getComputedStyle(document.body).getPropertyValue('--font-mono');
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(ghost.name, (x1 + x2) / 2, y);
+  } else if (ghost.type === '3pin') {
+    const x1 = colX(ghost.pinCols[0]);
+    const x3 = colX(ghost.pinCols[2]);
+    const y = rowY(ghost.pinRows[0]);
+    const bodyX = x1 - 4;
+    const bodyW = x3 - x1 + 8;
+    const bodyH = CELL * 0.9;
+
+    ctx.fillStyle = '#4a8';
+    ctx.strokeStyle = '#8f8';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(bodyX, y - bodyH / 2);
+    ctx.lineTo(bodyX + bodyW, y - bodyH / 2);
+    ctx.arc(bodyX + bodyW, y, bodyH / 2, -Math.PI / 2, Math.PI / 2);
+    ctx.lineTo(bodyX, y + bodyH / 2);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 9px ' + getComputedStyle(document.body).getPropertyValue('--font-mono');
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(ghost.name, (x1 + x3) / 2, y);
+  } else if (ghost.type === 'ic') {
+    const leftCol = ghost.col;
+    const rightCol = ghost.col + 3;
+    const x1 = colX(leftCol) - 6;
+    const x2 = colX(rightCol) + 6;
+    const y1 = rowY(6) - CELL * 0.4;
+    const y2 = rowY(7) + CELL * 0.4;
+
+    ctx.fillStyle = '#2a4a2a';
+    ctx.strokeStyle = '#8f8';
+    ctx.lineWidth = 2;
+    roundRect(ctx, x1, y1, x2 - x1, y2 - y1, 4);
+
+    ctx.fillStyle = '#8f8';
+    ctx.font = 'bold 9px ' + getComputedStyle(document.body).getPropertyValue('--font-mono');
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(ghost.name, (x1 + x2) / 2, (y1 + y2) / 2);
+  }
+
+  // Draw ghost pins
+  for (let i = 0; i < ghost.pins.length; i++) {
+    if (ghost.pins[i].toLowerCase() === 'nc') continue;
+    const x = colX(ghost.pinCols[i]);
+    const y = rowY(ghost.pinRows[i]);
+    ctx.beginPath();
+    ctx.arc(x, y, PIN_R, 0, Math.PI * 2);
+    ctx.fillStyle = '#8f8';
+    ctx.fill();
+    ctx.strokeStyle = '#4a4';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  ctx.restore();
+}
+
+function drawWire(wire) {
+  const y = rowY(wire.row);
+  const x1 = colX(Math.min(wire.col1, wire.col2));
+  const x2 = colX(Math.max(wire.col1, wire.col2));
+
+  ctx.strokeStyle = wire.color || '#40a0ff';
+  ctx.lineWidth = 2.5;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(x1, y);
+  ctx.lineTo(x2, y);
+  ctx.stroke();
+
+  // Endpoint dots
+  for (const x of [x1, x2]) {
+    ctx.beginPath();
+    ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+    ctx.fillStyle = wire.color || '#40a0ff';
+    ctx.fill();
+  }
+}
+
+function drawBridge(bridge) {
+  const x = colX(bridge.col);
+  const y1 = rowY(6);
+  const y2 = rowY(7);
+
+  const bulge = 12;
+  ctx.strokeStyle = bridge.color || '#ff8040';
+  ctx.lineWidth = 2.5;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(x, y1);
+  ctx.bezierCurveTo(x + bulge, y1 + 4, x + bulge, y2 - 4, x, y2);
+  ctx.stroke();
+
+  for (const y of [y1, y2]) {
+    ctx.beginPath();
+    ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+    ctx.fillStyle = bridge.color || '#ff8040';
+    ctx.fill();
+  }
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+}
+
+// ==========================================================================
+// Hit Testing for Components
+// ==========================================================================
+
+function hitTestComponent(mx, my) {
+  // Check components in reverse order (top-most first)
+  for (let i = placedComponents.length - 1; i >= 0; i--) {
+    const comp = placedComponents[i];
+    if (comp.type === '2pin') {
+      const x1 = colX(comp.pinCols[0]);
+      const x2 = colX(comp.pinCols[1]);
+      const y = rowY(comp.pinRows[0]);
+      const margin = CELL * 0.5;
+      if (mx >= x1 - margin && mx <= x2 + margin &&
+          my >= y - margin && my <= y + margin) {
+        return comp;
+      }
+    } else if (comp.type === '3pin') {
+      const x1 = colX(comp.pinCols[0]);
+      const x3 = colX(comp.pinCols[2]);
+      const y = rowY(comp.pinRows[0]);
+      const margin = CELL * 0.5;
+      if (mx >= x1 - margin && mx <= x3 + margin &&
+          my >= y - margin && my <= y + margin) {
+        return comp;
+      }
+    } else if (comp.type === 'ic') {
+      const x1 = colX(comp.col) - 8;
+      const x2 = colX(comp.col + 3) + 8;
+      const y1 = rowY(6) - CELL * 0.5;
+      const y2 = rowY(7) + CELL * 0.5;
+      if (mx >= x1 && mx <= x2 && my >= y1 && my <= y2) {
+        return comp;
+      }
+    }
+  }
+  return null;
+}
+
+function getMousePos(e) {
+  const rect = canvas.getBoundingClientRect();
+  return {
+    x: e.clientX - rect.left + canvasWrap.scrollLeft,
+    y: e.clientY - rect.top + canvasWrap.scrollTop,
+  };
+}
+
+function colFromX(px) {
+  return Math.round((px - PAD_LEFT) / CELL);
+}
+
+// ==========================================================================
+// Interaction
+// ==========================================================================
+
+function getHoleFromMouse(e) {
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left + canvasWrap.scrollLeft;
+  const my = e.clientY - rect.top + canvasWrap.scrollTop;
+
+  let bestDist = Infinity;
+  let bestHole = null;
+
+  for (let r = 0; r < TOTAL_ROWS; r++) {
+    for (let c = 0; c < totalCols; c++) {
+      const hx = colX(c);
+      const hy = rowY(r);
+      const dx = mx - hx;
+      const dy = my - hy;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < CELL * 0.6 && dist < bestDist) {
+        bestDist = dist;
+        bestHole = { col: c, row: r };
+      }
+    }
+  }
+
+  return bestHole;
+}
+
+canvas.addEventListener('mousemove', (e) => {
+  const pos = getMousePos(e);
+
+  // Handle drag
+  if (dragComp) {
+    const newCol = colFromX(pos.x) - dragOffset;
+    // Clamp to board bounds
+    const maxCol = comp_type_width(dragComp);
+    dragGhostCol = Math.max(0, Math.min(totalCols - maxCol, newCol));
+    draw();
+    setStatus(`Moving ${dragComp.name} → col ${dragGhostCol + 1}`);
+    return;
+  }
+
+  const hole = getHoleFromMouse(e);
+  hoveredHole = hole;
+
+  if (hole) {
+    const info = pinMap.get(pinKey(hole.col, hole.row));
+    if (info) {
+      hoveredNet = info.netName;
+      showTooltip(e, info);
+    } else {
+      hoveredNet = null;
+      const wireInfo = findWireAt(hole.col, hole.row);
+      const bridgeInfo = findBridgeAt(hole.col);
+      if (wireInfo) {
+        showTooltipText(e, `Wire: col ${wireInfo.col1+1}–${wireInfo.col2+1}, row ${ROW_LABELS[wireInfo.row]}`);
+      } else if (bridgeInfo) {
+        showTooltipText(e, `Bridge: col ${bridgeInfo.col+1}`);
+      } else {
+        hideTooltip();
+      }
+    }
+  } else {
+    hoveredNet = null;
+    hideTooltip();
+  }
+
+  // In move mode, update cursor based on what's under the mouse
+  if (mode === 'move') {
+    const comp = hitTestComponent(pos.x, pos.y);
+    canvas.style.cursor = comp ? 'grab' : 'default';
+  }
+
+  draw();
+});
+
+canvas.addEventListener('mouseleave', () => {
+  if (!dragComp) {
+    hoveredHole = null;
+    hoveredNet = null;
+    hideTooltip();
+    draw();
+  }
+});
+
+canvas.addEventListener('mousedown', (e) => {
+  if (mode !== 'move') return;
+  if (e.button !== 0) return;
+
+  const pos = getMousePos(e);
+  const comp = hitTestComponent(pos.x, pos.y);
+  if (!comp) return;
+
+  dragComp = comp;
+  dragOffset = colFromX(pos.x) - comp.col;
+  dragGhostCol = comp.col;
+  canvas.style.cursor = 'grabbing';
+  hideTooltip();
+  setStatus(`Dragging ${comp.name}...`);
+  draw();
+});
+
+canvas.addEventListener('mouseup', (e) => {
+  if (!dragComp) return;
+
+  // Commit the drag
+  if (dragGhostCol != null) {
+    dragComp.col = dragGhostCol;
+    recomputeComponentPins(dragComp);
+
+    // Save position
+    if (!layoutData.component_positions) layoutData.component_positions = {};
+    layoutData.component_positions[dragComp.name] = dragComp.col;
+
+    // Save row info too
+    if (!layoutData.component_rows) layoutData.component_rows = {};
+    if (dragComp.placementRow != null) {
+      layoutData.component_rows[dragComp.name] = dragComp.placementRow;
+    }
+  }
+
+  const movedName = dragComp.name;
+  dragComp = null;
+  dragGhostCol = null;
+  dragOffset = 0;
+  canvas.style.cursor = 'grab';
+
+  // Rebuild everything
+  buildPinMap();
+  computeConnectivity();
+  draw();
+  setStatus(`Moved ${movedName} ✓`);
+});
+
+function comp_type_width(comp) {
+  if (comp.type === '2pin') return 5;
+  if (comp.type === '3pin') return 3;
+  if (comp.type === 'ic') return 4;
+  return 1;
+}
+
+canvas.addEventListener('click', (e) => {
+  if (mode === 'move') return; // Handled by mousedown/mouseup
+  const hole = getHoleFromMouse(e);
+  if (!hole) return;
+
+  if (mode === 'wire') {
+    handleWireClick(hole);
+  } else if (mode === 'bridge') {
+    handleBridgeClick(hole);
+  } else if (mode === 'delete') {
+    handleDeleteClick(hole);
+  }
+});
+
+function handleWireClick(hole) {
+  if (!wireStart) {
+    if (!ALL_SIGNAL_ROWS.includes(hole.row)) {
+      setStatus('Wires must be on signal rows (a-j)');
+      return;
+    }
+    wireStart = hole;
+    setStatus(`Wire start: col ${hole.col + 1}, row ${ROW_LABELS[hole.row]} — click end point`);
+  } else {
+    if (hole.row !== wireStart.row) {
+      setStatus('Wires must be horizontal (same row). Use Bridge for cross-gap.');
+      wireStart = null;
+      return;
+    }
+    if (hole.col === wireStart.col) {
+      wireStart = null;
+      setStatus('Wire cancelled (same hole)');
+      return;
+    }
+
+    const c1 = wireStart.col, c2 = hole.col;
+    layoutData.wires.push({
+      row: hole.row,
+      col1: c1,
+      col2: c2,
+      color: '#40a0ff',
+    });
+    wireStart = null;
+    computeConnectivity();
+    draw();
+    setStatus(`Wire added: col ${Math.min(c1,c2) + 1}–${Math.max(c1,c2) + 1}`);
+  }
+}
+
+function handleBridgeClick(hole) {
+  if (!TOP_BUS_ROWS.includes(hole.row) && !BOTTOM_BUS_ROWS.includes(hole.row)) {
+    setStatus('Bridges connect signal rows across the center gap');
+    return;
+  }
+
+  const existing = layoutData.bridges.find(b => b.col === hole.col);
+  if (existing) {
+    setStatus(`Bridge already exists at col ${hole.col + 1}`);
+    return;
+  }
+
+  layoutData.bridges.push({
+    col: hole.col,
+    color: '#ff8040',
+  });
+  computeConnectivity();
+  draw();
+  setStatus(`Bridge added at col ${hole.col + 1}`);
+}
+
+function handleDeleteClick(hole) {
+  const wireIdx = layoutData.wires.findIndex(w =>
+    w.row === hole.row &&
+    hole.col >= Math.min(w.col1, w.col2) &&
+    hole.col <= Math.max(w.col1, w.col2)
+  );
+
+  if (wireIdx >= 0) {
+    layoutData.wires.splice(wireIdx, 1);
+    computeConnectivity();
+    draw();
+    setStatus('Wire deleted');
+    return;
+  }
+
+  const bridgeIdx = layoutData.bridges.findIndex(b => b.col === hole.col);
+  if (bridgeIdx >= 0) {
+    layoutData.bridges.splice(bridgeIdx, 1);
+    computeConnectivity();
+    draw();
+    setStatus('Bridge deleted');
+    return;
+  }
+
+  setStatus('Nothing to delete here');
+}
+
+function findWireAt(col, row) {
+  return layoutData.wires.find(w =>
+    w.row === row &&
+    col >= Math.min(w.col1, w.col2) &&
+    col <= Math.max(w.col1, w.col2)
+  );
+}
+
+function findBridgeAt(col) {
+  return layoutData.bridges.find(b => b.col === col);
+}
+
+function showTooltip(e, info) {
+  const lines = [
+    `${info.component} pin ${info.pinLabel}`,
+    `Net: ${info.netName}`,
+    `Type: ${info.compType}`,
+  ];
+  if (info.compValue) lines.push(`Value: ${info.compValue}`);
+
+  const status = connectivity.get(info.netName);
+  if (status === 'disconnected') lines.push('⚠ DISCONNECTED');
+
+  const colNets = busNets.get(hoveredHole.col);
+  if (colNets && colNets.size > 1) {
+    const realNets = [...colNets].filter(n => n !== 'nc');
+    if (realNets.length > 1) {
+      lines.push(`⛔ BUS CONFLICT: ${realNets.join(', ')}`);
+    }
+  }
+
+  tooltip.textContent = lines.join('\n');
+  tooltip.style.display = 'block';
+  positionTooltip(e);
+}
+
+function showTooltipText(e, text) {
+  tooltip.textContent = text;
+  tooltip.style.display = 'block';
+  positionTooltip(e);
+}
+
+function positionTooltip(e) {
+  const rect = canvasWrap.getBoundingClientRect();
+  tooltip.style.left = (e.clientX - rect.left + 12) + 'px';
+  tooltip.style.top = (e.clientY - rect.top - 10) + 'px';
+}
+
+function hideTooltip() {
+  tooltip.style.display = 'none';
+}
+
+// ==========================================================================
+// Toolbar
+// ==========================================================================
+
+function setMode(newMode) {
+  mode = newMode;
+  wireStart = null;
+  dragComp = null;
+  dragGhostCol = null;
+  document.querySelectorAll('.toolbar button').forEach(b => b.classList.remove('active'));
+  const btnId = {
+    select: 'btn-select',
+    move: 'btn-move',
+    wire: 'btn-wire',
+    bridge: 'btn-bridge',
+    delete: 'btn-delete',
+  }[newMode];
+  if (btnId) document.getElementById(btnId).classList.add('active');
+
+  if (newMode === 'move') {
+    canvas.style.cursor = 'grab';
+  } else if (newMode === 'select') {
+    canvas.style.cursor = 'default';
+  } else {
+    canvas.style.cursor = 'crosshair';
+  }
+  setStatus(`Mode: ${newMode}`);
+  draw();
+}
+
+document.getElementById('btn-select').addEventListener('click', () => setMode('select'));
+document.getElementById('btn-move').addEventListener('click', () => setMode('move'));
+document.getElementById('btn-wire').addEventListener('click', () => setMode('wire'));
+document.getElementById('btn-bridge').addEventListener('click', () => setMode('bridge'));
+document.getElementById('btn-delete').addEventListener('click', () => setMode('delete'));
+
+document.getElementById('btn-save').addEventListener('click', async () => {
+  // Save component positions and rows
+  layoutData.component_positions = {};
+  layoutData.component_rows = {};
+  for (const comp of placedComponents) {
+    layoutData.component_positions[comp.name] = comp.col;
+    if (comp.placementRow != null) {
+      layoutData.component_rows[comp.name] = comp.placementRow;
+    }
+  }
+
+  try {
+    await fetch('/api/layout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(layoutData),
+    });
+    setStatus('Layout saved ✓');
+  } catch (e) {
+    setStatus('Save failed: ' + e.message);
+  }
+});
+
+document.getElementById('btn-load').addEventListener('click', async () => {
+  try {
+    const resp = await fetch('/api/layout');
+    layoutData = await resp.json();
+    placeComponents();
+    buildPinMap();
+    computeConnectivity();
+    draw();
+    setStatus('Layout reloaded ✓');
+  } catch (e) {
+    setStatus('Reload failed: ' + e.message);
+  }
+});
+
+function setStatus(msg) {
+  document.getElementById('status-bar').textContent = msg;
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    wireStart = null;
+    if (dragComp) {
+      // Cancel drag
+      dragComp = null;
+      dragGhostCol = null;
+      dragOffset = 0;
+      draw();
+    }
+    setMode('select');
+  } else if (e.key === 'w') setMode('wire');
+  else if (e.key === 'b') setMode('bridge');
+  else if (e.key === 'd') setMode('delete');
+  else if (e.key === 'i') setMode('select');
+  else if (e.key === 'm') setMode('move');
+  else if (e.key === 's' && e.ctrlKey) {
+    e.preventDefault();
+    document.getElementById('btn-save').click();
+  }
+});
+
+// ==========================================================================
+// Init
+// ==========================================================================
+
+loadData();
+</script>
+</body>
+</html>

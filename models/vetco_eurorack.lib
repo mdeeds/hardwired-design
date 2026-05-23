@@ -546,6 +546,24 @@ XA INA_P INA_N VCC VEE OUTA LM358N_SEC
 XB INB_P INB_N VCC VEE OUTB LM358N_SEC
 .ENDS LM358N
 
+* --- High-Fidelity Open-Collector Comparator Model ---
+.SUBCKT LM393_SEC 1 2 3 4 5
+* Pins: IN+ IN- VCC VEE OUT
+Q1 6 2 8 QPNP
+Q2 7 1 8 QPNP
+R1 6 4 10k
+R2 7 4 10k
+C_INT1 6 4 1p
+C_INT2 7 4 1p
+I1 3 8 DC 100u
+G1 4 10 7 6 10m
+R3 10 4 1Meg
+C_INT3 10 4 1p
+Q3 5 10 4 QNPN
+.model QPNP pnp(bf=100)
+.model QNPN npn(bf=100)
+.ends LM393_SEC
+
 * ----------------------------------------------------------------
 * NTE987 — Quad Low-Power Op-Amp  (LM324 equiv.)  DIP-14, 4 sections
 *   Avol≈100dB  GBW=1MHz  SR=0.5V/µs  Rails=±16V or 3–32V single
@@ -1211,5 +1229,8 @@ XB INB_P INB_N VCC VEE OUTB NTE983_SEC
 *   NTE824    10 MHz    9V/µs    Low-noise dual (NE5532), audio path
 *   NTE983    3 MHz     13V/µs   JFET input, dual (TL072)
 *   LM386     300 kHz   —        Audio power amp, single-supply
+*
+*   Part      Response           Notes
+*   LM393     1.3 us             Dual Comparator
 *
 * ================================================================
