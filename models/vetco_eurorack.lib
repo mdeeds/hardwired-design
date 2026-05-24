@@ -495,49 +495,65 @@ VLN   0 92 DC 40
 * LM358N — Dual Op-Amp  (Texas Instruments)  DIP-8, 2 sections
 *   Avol≈100dB  GBW≈700kHz  SR=0.3V/µs  Rails=±16V or 3–32V single
 *   Use: CV utility; LFOs, envelopes, comparators, logic.
-*   Source: Boyle macro model with LM358 input-stage parameters.
-*   NOTE: PNP-equivalent input stage allows CM input to V- rail.
-*         Output swings to within ~20mV of V-.
+*   Source: Analog Devices-hosted legacy LM358 macromodel
+*           (legacy National/Standard Linear model; user-supplied source URL:
+*           https://www.analog.com/en/products/lmx358.html).
+*   NOTE: Wrapped to local 5-pin section order IN+ IN- V+ V- OUT.
+*         This vendor macro gives a much more realistic output-current limit
+*         than the prior Boyle fit. VIPM/VINM are lightly bench-tuned so the
+*         source side breaks near +30mA while the sink side breaks just above
+*         -20mA on +/-12V rails.
 * ----------------------------------------------------------------
+.SUBCKT LM358N_VENDOR_RAW 1 2 3 4 5
+*                       IN- IN+ OUT V+ V-
+.MODEL MDTH D IS=1E-8 KF=3.104131E-15 CJO=10F
+* INPUT STAGE
+CIP 2 5 1.000000E-12
+CIN 1 5 1.000000E-12
+EIP 10 5 2 5 1
+EIN 16 5 1 5 1
+RIP 10 11 2.600000E+01
+RIN 15 16 2.600000E+01
+RIS 11 15 2.003862E+02
+DIP 11 12 MDTH AREA=400E-12
+DIN 15 14 MDTH AREA=400E-12
+VOFP 12 13 DC 0
+VOFN 13 14 DC 0
+IPOL 13 5 1.000000E-05
+CPS 11 15 3.783376E-09
+DINN 17 13 MDTH AREA=400E-12
+VIN 17 5 0.000000e+00
+DINR 15 18 MDTH AREA=400E-12
+VIP 4 18 2.000000E+00
+FCP 4 5 VOFP 3.400000E+01
+FCN 5 4 VOFN 3.400000E+01
+FIBP 2 5 VOFN 2.000000E-03
+FIBN 5 1 VOFP 2.000000E-03
+* AMPLIFYING STAGE
+FIP 5 19 VOFP 3.600000E+02
+FIN 5 19 VOFN 3.600000E+02
+RG1 19 5 3.652997E+06
+RG2 19 4 3.652997E+06
+CC 19 5 6.000000E-09
+DOPM 19 22 MDTH AREA=400E-12
+DONM 21 19 MDTH AREA=400E-12
+HOPM 22 28 VOUT 7.500000E+03
+VIPM 28 4 2.200000E+02
+HONM 21 27 VOUT 7.500000E+03
+VINM 5 27 1.520000E+02
+EOUT 26 23 19 5 1
+VOUT 23 5 0
+ROUT 26 3 20
+COUT 3 5 1.000000E-12
+DOP 19 25 MDTH AREA=400E-12
+VOP 4 25 2.242230E+00
+DON 24 19 MDTH AREA=400E-12
+VON 24 5 7.922301E-01
+.ENDS LM358N_VENDOR_RAW
+
 .SUBCKT LM358N_SEC 1 2 3 4 5
 *                   IN+ IN- V+ V- OUT
-*
-C1   11 12 3.498E-12
-C2    6  7 30.00E-12
-DC    5 53 DX
-DE   54  5 DX
-DLP  90 91 DX
-DLN  92 90 DX
-DP    4  3 DX
-EGND 99  0 VALUE = {0.5*V(3) + 0.5*V(4)}
-FB1   7 99 VB  15.91E6
-FB2   7 99 VC -20E6
-FB3   7 99 VE  20E6
-FB4   7 99 VLP 20E6
-FB5   7 99 VLN -20E6
-GA    6  0 11 12 125.7E-6
-GCM   0  6 10 99 7.067E-9
-IEE   3 10 DC 10.04E-6
-HLIM 90  0 VLIM 1K
-Q1   11  2 13 QX
-Q2   12  1 14 QX
-R2    6  9 100.0E3
-RC1   11  4 7.957E3
-RC2   12  4 7.957E3
-RE1  13 10 2.773E3
-RE2  14 10 2.773E3
-REE  10 99 19.92E6
-RO1   8  5 50
-RO2   7 99 25
-RP    3  4 30.31E3
-VB    9  0 DC 0
-VC    3 53 DC 2.1
-VE   54  4 DC 0.2
-VLIM  7  8 DC 0
-VLP  91  0 DC 40
-VLN   0 92 DC 40
-.MODEL DX D(IS=800.0E-18 RS=1)
-.MODEL QX PNP(IS=800.0E-18 BF=62.50)
+XCORE 2 1 5 3 4 LM358N_VENDOR_RAW
 .ENDS LM358N_SEC
 
 * LM358N package wrapper — dual, shared VCC/VEE
