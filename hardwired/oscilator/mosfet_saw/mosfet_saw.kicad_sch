@@ -1780,6 +1780,320 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "Transistor_FET:2N7000"
+			(pin_names
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "Q"
+				(at 5.08 1.905 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Value" "2N7000"
+				(at 5.08 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Footprint" "Package_TO_SOT_THT:TO-92_Inline"
+				(at 5.08 -1.905 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+						(italic yes)
+					)
+					(justify left)
+				)
+			)
+			(property "Datasheet" "https://www.vishay.com/docs/70226/70226.pdf"
+				(at 5.08 -3.81 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Description" "0.2A Id, 200V Vds, N-Channel MOSFET, 2.6V Logic Level, TO-92"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "N-Channel MOSFET Logic-Level"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "TO?92*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "2N7000_0_1"
+				(polyline
+					(pts
+						(xy 0.254 1.905) (xy 0.254 -1.905)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.254 0) (xy -2.54 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.762 2.286) (xy 0.762 1.27)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.762 0.508) (xy 0.762 -0.508)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.762 -1.27) (xy 0.762 -2.286)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.762 -1.778) (xy 3.302 -1.778) (xy 3.302 1.778) (xy 0.762 1.778)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.016 0) (xy 2.032 0.381) (xy 2.032 -0.381) (xy 1.016 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(circle
+					(center 1.651 0)
+					(radius 2.794)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.54 2.54) (xy 2.54 1.778)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center 2.54 1.778)
+					(radius 0.254)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(circle
+					(center 2.54 -1.778)
+					(radius 0.254)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.54 -2.54) (xy 2.54 0) (xy 0.762 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.794 0.508) (xy 2.921 0.381) (xy 3.683 0.381) (xy 3.81 0.254)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 3.302 0.381) (xy 2.921 -0.254) (xy 3.683 -0.254) (xy 3.302 0.381)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "2N7000_1_1"
+				(pin passive line
+					(at 2.54 -5.08 90)
+					(length 2.54)
+					(name "S"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -5.08 0 0)
+					(length 2.54)
+					(name "G"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 2.54 5.08 270)
+					(length 2.54)
+					(name "D"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "power:+12V"
 			(power global)
 			(pin_numbers
@@ -2230,7 +2544,7 @@
 		(at 120.65 55.88)
 		(diameter 0)
 		(color 0 0 0 0)
-		(uuid "7f06d586-0ed6-43aa-92d2-9cbb392058b0")
+		(uuid "87942ef3-84c4-426e-b530-6b9fcff88236")
 	)
 	(junction
 		(at 176.53 82.55)
@@ -2363,6 +2677,16 @@
 			(type default)
 		)
 		(uuid "1a455769-4733-42aa-8416-85a8bcf68960")
+	)
+	(wire
+		(pts
+			(xy 120.65 40.64) (xy 120.65 55.88)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "20c515d6-cccd-4420-92d8-350f11613db2")
 	)
 	(wire
 		(pts
@@ -2686,23 +3010,13 @@
 	)
 	(wire
 		(pts
-			(xy 120.65 40.64) (xy 120.65 55.88)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "d452fb8c-5192-4c47-92f4-99239170ad3a")
-	)
-	(wire
-		(pts
 			(xy 120.65 55.88) (xy 120.65 73.66)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "d506f035-5f0e-4747-88f6-47f16cdd662e")
+		(uuid "d452fb8c-5192-4c47-92f4-99239170ad3a")
 	)
 	(wire
 		(pts
@@ -2904,7 +3218,7 @@
 			(uuid "2ded0b76-83e9-45d0-a056-fc8058460673")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "#PWR07")
 					(unit 1)
@@ -2982,7 +3296,7 @@
 			(uuid "1157f0bd-956c-433f-bce3-5758a3669918")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "#GND01")
 					(unit 1)
@@ -3084,7 +3398,7 @@
 			(uuid "5dcb59d6-e106-4e8d-a3ef-f2036aabc2ad")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "R7")
 					(unit 1)
@@ -3163,7 +3477,7 @@
 			(uuid "e7314880-ebec-413f-b83c-2e1b059a0911")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "#PWR020")
 					(unit 1)
@@ -3241,7 +3555,7 @@
 			(uuid "90222932-fb82-4074-8001-b76dfa31583b")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "#PWR021")
 					(unit 1)
@@ -3323,7 +3637,7 @@
 			(uuid "e871c47a-e046-4eb6-892e-71bfd7fd1de6")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "R3")
 					(unit 1)
@@ -3440,7 +3754,7 @@
 			(uuid "d64b4b93-7dbe-4eff-8ced-48af04be05f8")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "Q3")
 					(unit 1)
@@ -3522,7 +3836,7 @@
 			(uuid "89cde8c3-d584-4a26-9d62-d8f5e115e3ca")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "C1")
 					(unit 1)
@@ -3552,7 +3866,7 @@
 				)
 			)
 		)
-		(property "Value" "180k"
+		(property "Value" "100k"
 			(at 198.12 62.23 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3595,28 +3909,6 @@
 				)
 			)
 		)
-		(property "Sim.Device" "R"
-			(at 132.08 264.16 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Sim.Pins" "1=+ 2=-"
-			(at 132.08 264.16 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
 		(pin "2"
 			(uuid "40b60dce-0e20-40f7-b69c-62a72e64f6f3")
 		)
@@ -3624,7 +3916,7 @@
 			(uuid "c091eff6-0e5b-453c-8510-d39f2a0ee388")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "R4")
 					(unit 1)
@@ -3702,7 +3994,7 @@
 			(uuid "b6006e7e-0c5c-49ed-bb71-ec832e7aff4b")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "#PWR04")
 					(unit 1)
@@ -3818,7 +4110,7 @@
 			(uuid "ff86408f-d7c1-4cab-987b-bde37bb52160")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "V1")
 					(unit 1)
@@ -3896,7 +4188,7 @@
 			(uuid "8af22248-86f1-429d-b60a-099a10784f0f")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "#PWR02")
 					(unit 1)
@@ -4030,7 +4322,7 @@
 			(uuid "e369013a-e7a1-4cc5-8a8f-6ac884934f8c")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "U4")
 					(unit 1)
@@ -4112,7 +4404,7 @@
 			(uuid "f4cb822e-768d-43d1-b1a3-bae778885706")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "R11")
 					(unit 1)
@@ -4214,7 +4506,7 @@
 			(uuid "134d2e72-2d7f-499d-b1ec-e6aceb28d822")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "D2")
 					(unit 1)
@@ -4292,7 +4584,7 @@
 			(uuid "3055e86e-44b6-4c51-a8b1-3ec30f249c62")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "#PWR015")
 					(unit 1)
@@ -4374,7 +4666,7 @@
 			(uuid "53c04a6a-c646-455c-985f-321e7fc40121")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "R10")
 					(unit 1)
@@ -4454,7 +4746,7 @@
 			(uuid "60b76aea-1eb3-4694-9f61-0dc91654bd36")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "R1")
 					(unit 1)
@@ -4536,7 +4828,7 @@
 			(uuid "02a01563-b1fc-4335-bdb4-eb0195970069")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "R9")
 					(unit 1)
@@ -4652,7 +4944,7 @@
 			(uuid "258960bf-6dd7-4798-9a70-6c81bde5c1f3")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "V2")
 					(unit 1)
@@ -4730,125 +5022,9 @@
 			(uuid "bb3e49c0-61b6-4b34-b448-cecdd944e46b")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "#PWR013")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Simulation_SPICE:NPN")
-		(at 125.73 53.34 90)
-		(mirror x)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "65a1ccb4-8a2e-472b-a34f-eb3cd5384415")
-		(property "Reference" "Q1"
-			(at 125.73 59.69 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "NPN"
-			(at 125.73 62.23 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 125.73 116.84 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" "https://ngspice.sourceforge.io/docs/ngspice-html-manual/manual.xhtml#cha_BJTs"
-			(at 125.73 116.84 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Bipolar transistor symbol for simulation only, substrate tied to the emitter"
-			(at 125.73 53.34 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Sim.Device" "NPN"
-			(at 125.73 53.34 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Sim.Type" "GUMMELPOON"
-			(at 125.73 53.34 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Sim.Pins" "1=C 2=B 3=E"
-			(at 125.73 53.34 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "2"
-			(uuid "660d85ee-e023-4b32-94d8-4b41f999d918")
-		)
-		(pin "3"
-			(uuid "4484fcd7-6691-454f-9f61-c39768f57ee9")
-		)
-		(pin "1"
-			(uuid "94369e46-d099-4169-a5c9-8f74baed3245")
-		)
-		(instances
-			(project "transistor_saw"
-				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
-					(reference "Q1")
 					(unit 1)
 				)
 			)
@@ -4980,7 +5156,7 @@
 			(uuid "abe8f58a-0c18-4ff3-bf57-0f3baac8d9ff")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "U1")
 					(unit 1)
@@ -5098,7 +5274,7 @@
 			(uuid "1daefad9-348f-4295-8451-197332e26805")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "Q4")
 					(unit 1)
@@ -5178,7 +5354,7 @@
 			(uuid "edb6f6f6-50e8-412d-a72e-d3eb8caf5905")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "R5")
 					(unit 1)
@@ -5257,7 +5433,7 @@
 			(uuid "5c59e026-2b9e-46be-82a6-a7262735702d")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "#PWR03")
 					(unit 1)
@@ -5335,7 +5511,7 @@
 			(uuid "5fbfe5de-4b75-408e-b708-4ffc48930ab1")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "#PWR019")
 					(unit 1)
@@ -5462,7 +5638,7 @@
 			(uuid "510170d5-a2a6-4615-ba5c-5488a74e3121")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "R6")
 					(unit 1)
@@ -5596,7 +5772,7 @@
 			(uuid "233ac2e7-cfd2-43b7-9f8f-a0fb462683f9")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "U3")
 					(unit 1)
@@ -5675,7 +5851,7 @@
 			(uuid "662d6c6f-45d7-4808-ac66-b1a918e9b19f")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "#PWR09")
 					(unit 1)
@@ -5753,7 +5929,7 @@
 			(uuid "7d6be45d-e9df-4a63-80b6-99c05b111522")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "#PWR05")
 					(unit 1)
@@ -5831,7 +6007,7 @@
 			(uuid "353b3953-4da0-4a03-835f-8ffb0a712cbf")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "#PWR016")
 					(unit 1)
@@ -5910,9 +6086,128 @@
 			(uuid "5934a008-c297-4b3a-88ab-b8ae792e801d")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "#PWR017")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Transistor_FET:2N7000")
+		(at 125.73 53.34 90)
+		(mirror x)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "afab9e4c-001f-4093-ae32-18a9c1bd639a")
+		(property "Reference" "Q1"
+			(at 125.73 59.69 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "2N7000"
+			(at 125.73 62.23 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Package_TO_SOT_THT:TO-92_Inline"
+			(at 127.635 58.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+					(italic yes)
+				)
+				(justify left)
+			)
+		)
+		(property "Datasheet" "https://www.vishay.com/docs/70226/70226.pdf"
+			(at 129.54 58.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Description" "0.2A Id, 200V Vds, N-Channel MOSFET, 2.6V Logic Level, TO-92"
+			(at 125.73 53.34 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Sim.Device" "NMOS"
+			(at 125.73 53.34 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Sim.Type" "VDMOS"
+			(at 125.73 53.34 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Sim.Pins" "1=S 2=G 3=D"
+			(at 125.73 53.34 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "2"
+			(uuid "8620f98a-b4ee-4911-ab69-355e835314a3")
+		)
+		(pin "1"
+			(uuid "caa7ca89-1d0b-4e21-881f-a9196b3378e6")
+		)
+		(pin "3"
+			(uuid "b03a09d5-83a7-4b4c-9ff1-d04399d0f811")
+		)
+		(instances
+			(project "mosfet_saw"
+				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
+					(reference "Q1")
 					(unit 1)
 				)
 			)
@@ -5989,7 +6284,7 @@
 			(uuid "43fee164-d56c-406d-9967-e7ef9781e916")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "#PWR08")
 					(unit 1)
@@ -6123,7 +6418,7 @@
 			(uuid "f93cd886-5593-42ec-97a7-fd77c3062191")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "U2")
 					(unit 1)
@@ -6202,7 +6497,7 @@
 			(uuid "9fd2fde6-90b7-46ab-8944-94ecc55c3389")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "#PWR022")
 					(unit 1)
@@ -6280,7 +6575,7 @@
 			(uuid "bdc0e109-9e23-45a4-ba64-302181056ebd")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "#PWR010")
 					(unit 1)
@@ -6358,7 +6653,7 @@
 			(uuid "aa967028-41b8-4385-8f7c-e62ed812f7e3")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "#PWR06")
 					(unit 1)
@@ -6436,7 +6731,7 @@
 			(uuid "c7a67919-115f-483b-8a20-8d563a8614f4")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "#PWR01")
 					(unit 1)
@@ -6514,7 +6809,7 @@
 			(uuid "ad81d19c-0886-4be5-91d5-ed4ff00493cf")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "#PWR011")
 					(unit 1)
@@ -6593,7 +6888,7 @@
 			(uuid "1e6ecf1e-0f56-4279-829a-77f01272ee9e")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "#PWR024")
 					(unit 1)
@@ -6675,7 +6970,7 @@
 			(uuid "8f27fc26-b3bd-4286-8f40-b8df69e2e1b9")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "R2")
 					(unit 1)
@@ -6794,7 +7089,7 @@
 			(uuid "e4c1a012-1afb-4dea-92e3-3bbdca4b393e")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "Q2")
 					(unit 1)
@@ -6873,7 +7168,7 @@
 			(uuid "243f04b7-d3ee-4147-8bc2-9e861befc5c2")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "#PWR014")
 					(unit 1)
@@ -6951,7 +7246,7 @@
 			(uuid "e28559ac-1d73-41fd-b717-3eb4c6a7db0f")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "#PWR023")
 					(unit 1)
@@ -7053,7 +7348,7 @@
 			(uuid "447a59e9-df28-4965-82ba-279c0fdd43fc")
 		)
 		(instances
-			(project "transistor_saw"
+			(project "mosfet_saw"
 				(path "/0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
 					(reference "D3")
 					(unit 1)

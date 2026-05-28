@@ -256,7 +256,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "transistor_saw.kicad_pro",
+    "filename": "mosfet_saw.kicad_pro",
     "version": 3
   },
   "net_settings": {
@@ -410,7 +410,7 @@
         "version": 0
       },
       "model_mode": 4,
-      "workbook_filename": "transistor_saw.wbk"
+      "workbook_filename": "mosfet_saw.wbk"
     },
     "page_layout_descr_file": "",
     "plot_directory": "",
@@ -419,12 +419,12 @@
     "subpart_id_separator": 0,
     "top_level_sheets": [
       {
-        "filename": "transistor_saw.kicad_sch",
+        "filename": "mosfet_saw.kicad_sch",
         "name": "Root",
         "uuid": "0cd4fbd8-7104-4778-b4d4-ee5fcf49fa00"
       }
     ],
-    "used_designators": "Q1",
+    "used_designators": "",
     "variants": []
   },
   "sheets": [

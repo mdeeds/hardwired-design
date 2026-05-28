@@ -256,7 +256,38 @@ class BreadboardHandler(http.server.SimpleHTTPRequestHandler):
             layout = self.load_bb_file()
             self.send_json(layout)
         else:
-            self.send_error(404)
+            # Serve static files from html_dir
+            filename = path.lstrip('/')
+            # Prevent simple directory traversal
+            if '..' in filename or filename.startswith('/'):
+                self.send_error(403, 'Forbidden')
+                return
+
+            filepath = os.path.join(self.html_dir, filename)
+            if os.path.exists(filepath) and os.path.isfile(filepath):
+                # Determine content type based on file extension
+                content_type = 'application/octet-stream'
+                is_binary = False
+                
+                if filename.endswith('.html'):
+                    content_type = 'text/html'
+                elif filename.endswith('.js'):
+                    content_type = 'application/javascript'
+                elif filename.endswith('.css'):
+                    content_type = 'text/css'
+                elif filename.endswith('.ico'):
+                    content_type = 'image/x-icon'
+                    is_binary = True
+                elif filename.endswith('.png'):
+                    content_type = 'image/png'
+                    is_binary = True
+                elif filename.endswith('.jpg') or filename.endswith('.jpeg'):
+                    content_type = 'image/jpeg'
+                    is_binary = True
+
+                self.serve_file(filename, content_type, is_binary)
+            else:
+                self.send_error(404, 'File not found')
 
     def do_POST(self):
         parsed = urlparse(self.path)
@@ -273,16 +304,20 @@ class BreadboardHandler(http.server.SimpleHTTPRequestHandler):
         else:
             self.send_error(404)
 
-    def serve_file(self, filename, content_type):
+    def serve_file(self, filename, content_type, is_binary=False):
         filepath = os.path.join(self.html_dir, filename)
         try:
-            with open(filepath, 'r', encoding='utf-8') as f:
-                content = f.read()
+            if is_binary:
+                with open(filepath, 'rb') as f:
+                    content = f.read()
+            else:
+                with open(filepath, 'r', encoding='utf-8') as f:
+                    content = f.read().encode('utf-8')
             self.send_response(200)
-            self.send_header('Content-Type', f'{content_type}; charset=utf-8')
-            self.send_header('Content-Length', len(content.encode('utf-8')))
+            self.send_header('Content-Type', content_type)
+            self.send_header('Content-Length', len(content))
             self.end_headers()
-            self.wfile.write(content.encode('utf-8'))
+            self.wfile.write(content)
         except FileNotFoundError:
             self.send_error(404)
 

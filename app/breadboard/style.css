@@ -1,0 +1,155 @@
+/* --- Reset & Base --- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #1a1a2e;
+  --bg-surface: #16213e;
+  --bg-board: #e8e4d4;
+  --text: #e0e0e0;
+  --text-muted: #8888aa;
+  --accent: #0f3460;
+  --hole: #333;
+  --hole-border: #555;
+  --pin-grey: #aaa;
+  --pin-highlight: #f0c040;
+  --pin-conflict: #ff2020;
+  --pin-disconnected: #3060cc;
+  --wire-color: #40a0ff;
+  --bridge-color: #ff8040;
+  --power-rail: #c44;
+  --ground-rail: #28a;
+  --board-stripe: #d4d0c0;
+  --board-center-gap: #c8c4b0;
+  --toolbar-bg: #0f3460;
+  --toolbar-hover: #1a4a7a;
+  --font-mono: 'Consolas', 'Fira Code', 'Source Code Pro', monospace;
+  --font-sans: 'Inter', 'Segoe UI', system-ui, sans-serif;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  overflow: hidden;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Header --- */
+header {
+  background: linear-gradient(135deg, var(--accent), #1a1a3e);
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid #333;
+  flex-shrink: 0;
+}
+header h1 {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+header .subtitle {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-family: var(--font-mono);
+}
+
+/* --- Toolbar --- */
+.toolbar {
+  background: var(--toolbar-bg);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  flex-shrink: 0;
+  border-bottom: 1px solid #222;
+}
+.toolbar button {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.toolbar button:hover {
+  background: var(--toolbar-hover);
+  border-color: #335;
+}
+.toolbar button.active {
+  background: #264a7a;
+  border-color: #5588cc;
+}
+.toolbar .sep {
+  width: 1px;
+  height: 24px;
+  background: #335;
+  margin: 0 6px;
+}
+.toolbar .status {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+/* --- Canvas container --- */
+.canvas-wrap {
+  flex: 1;
+  overflow: auto;
+  position: relative;
+  background: var(--bg);
+}
+canvas {
+  display: block;
+  cursor: default;
+}
+
+/* --- Tooltip --- */
+#tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: rgba(10, 10, 30, 0.92);
+  color: #eee;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: var(--font-mono);
+  border: 1px solid #446;
+  z-index: 100;
+  display: none;
+  white-space: pre;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+}
+
+/* --- Legend --- */
+.legend {
+  position: fixed;
+  bottom: 12px;
+  right: 12px;
+  background: rgba(15, 20, 40, 0.9);
+  border: 1px solid #335;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 11px;
+  z-index: 50;
+  line-height: 1.8;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.legend-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
