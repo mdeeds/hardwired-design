@@ -37,6 +37,15 @@ h1 {
   font-size: 0.9em;
 }
 
+.display-row {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+  max-width: 1300px;
+  width: 100%;
+}
+
 .scope-frame {
   background-color: #000;
   border: 10px solid var(--panel-color);
@@ -97,4 +106,33 @@ select:focus {
 
 .kb-info strong {
   color: var(--text-color);
+}
+
+.readout-display {
+  background-color: #0b150b;
+  border: 1px solid #1a331a;
+  border-radius: 4px;
+  padding: 8px 16px;
+  min-width: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.8);
+}
+
+#noteDisplay {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.8em;
+  font-weight: bold;
+  color: var(--accent-color);
+  text-shadow: 0 0 8px rgba(0, 255, 65, 0.6);
+  line-height: 1.2;
+}
+
+#freqDisplay {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.85em;
+  color: rgba(0, 255, 65, 0.7);
+  text-shadow: 0 0 4px rgba(0, 255, 65, 0.4);
 }

@@ -16,8 +16,13 @@
     </header>
 
     <main>
-      <div class="scope-frame">
-        <canvas id="scopeCanvas"></canvas>
+      <div class="display-row">
+        <div class="scope-frame">
+          <canvas id="scopeCanvas"></canvas>
+        </div>
+        <div class="scope-frame">
+          <canvas id="fftCanvas"></canvas>
+        </div>
       </div>
 
       <div class="controls">
@@ -47,6 +52,14 @@
             <option value="leftDelay">1/4 λ Delayed Left</option>
             <option value="rightDelay">1/4 λ Delayed Right</option>
           </select>
+        </div>
+
+        <div class="control-group">
+          <label>Ref Oscillator</label>
+          <div class="readout-display">
+            <div id="noteDisplay">A4</div>
+            <div id="freqDisplay">440.00 Hz</div>
+          </div>
         </div>
 
         <div class="kb-info">
