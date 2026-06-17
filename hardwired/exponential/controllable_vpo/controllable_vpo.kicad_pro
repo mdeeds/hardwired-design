@@ -256,7 +256,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "volt_per_octave.kicad_pro",
+    "filename": "controllable_vpo.kicad_pro",
     "version": 3
   },
   "net_settings": {
@@ -410,7 +410,7 @@
         "version": 0
       },
       "model_mode": 4,
-      "workbook_filename": "volt_per_octave.wbk"
+      "workbook_filename": "controllable_vpo.wbk"
     },
     "page_layout_descr_file": "",
     "plot_directory": "",
@@ -419,17 +419,17 @@
     "subpart_id_separator": 0,
     "top_level_sheets": [
       {
-        "filename": "volt_per_octave.kicad_sch",
+        "filename": "controllable_vpo.kicad_sch",
         "name": "Root",
-        "uuid": "bf76b78b-2fde-4fde-aea2-ec44e0810e49"
+        "uuid": "e4fac70c-cf61-4dc5-8ebf-1864d94ee819"
       }
     ],
-    "used_designators": "D1-4,#PWR2-17,Q1-2,U1-3,V3-4,R1-6,C1-2",
+    "used_designators": "V1-3,#PWR1-15,R1-4,#GND1,U1-3,Q1-3",
     "variants": []
   },
   "sheets": [
     [
-      "bf76b78b-2fde-4fde-aea2-ec44e0810e49",
+      "e4fac70c-cf61-4dc5-8ebf-1864d94ee819",
       "Root"
     ]
   ],

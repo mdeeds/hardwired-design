@@ -1,0 +1,77 @@
+* Exponential Converter using Matched BJT Pair
+* Control voltage: -5V to +5V
+* Output: exponential current relationship
+* Topology: I_out = I_ref * exp(V_in / Vt)
+* Where Vt = k*T/q ≈ 26mV at room temperature
+
+.title Exponential Converter - Matched BJT Pair
+
+* Power supplies
+VCC vcc 0 DC 12V
+VEE vee 0 DC -12V
+
+* Control input voltage source (-5V to +5V)
+VIN cv 0 DC 0V
+
+* Bias voltage divider: creates ~0.7V from +12V supply for octave scaling
+* V(bias) = 12V * 1k / (16k + 1k) ≈ 0.706V
+R_div_12v vcc bias 16k
+R_div_gnd bias 0 1k
+
+* Reference current bias resistor
+VBB vbb_bias 0 DC -11.4V
+RBB vbb_bias base_ref 100k
+
+* Input conditioning network: scales -5V to +5V input to proper octave range
+* Slope ≈ 18mV/V (octave scaling: current doubles per volt)
+* V_base = (cv * R_bias + V(bias) * R_in) / (R_in + R_bias)
+* With R_in=100k, R_bias=1k, V(bias)≈0.7V
+R_in cv base_div 100k
+R_bias bias base_div 1k
+
+* Op-amp buffer (unity-gain follower) to isolate from transistor loading
+* Prevents transistor base impedance from bending the conditioning voltage
+* Using ideal behavioral source for simplicity
+* Input: base_div, Output: cv_buffered
+* B<name> out 0 V=V(base_div)   — ideal buffer with 1V/V gain
+B_buffer cv_buffered 0 V=V(base_div)
+
+* Q1: Reference transistor (current source)
+* Collector at c_ref, Base at base_ref, Emitter at node 0
+Q1 c_ref base_ref 0 Q2N2222
+
+* Q2: Exponential converter transistor
+* Collector at c_exp, Base at cv_buffered (buffered conditioned input), Emitter at node 0
+Q2 c_exp cv_buffered 0 Q2N2222
+
+* Collector load resistors
+RC1 vcc c_ref 10k
+RC2 vcc c_exp 10k
+
+* BJT Models (standard 2N2222 and 2N2907 paired set)
+.model Q2N2222 NPN(IS=14.34E-15 BF=255.9 NF=1.307 VAF=74.03
++ IKF=0.2847 ISE=14.34E-15 NE=1.307 BR=6.092 NR=1 VAR=24 IKR=0
++ ISC=0 NC=2 RB=1 IRB=0.1 RBM=0.1 RE=0.1 RC=0.1 CJE=26.08E-12
++ VJE=0.75 MJE=0.33 CJC=7.306E-12 VJC=0.75 MJC=0.3 XCJC=1 CJS=0
++ VJS=0.75 MJS=0.5 XTB=1.5 EG=1.11 XTI=3 FC=0.5)
+
+.model Q2N2907 PNP(IS=14.34E-15 BF=255.9 NF=1.307 VAF=74.03
++ IKF=0.2847 ISE=14.34E-15 NE=1.307 BR=6.092 NR=1 VAR=24 IKR=0
++ ISC=0 NC=2 RB=1 IRB=0.1 RBM=0.1 RE=0.1 RC=0.1 CJE=26.08E-12
++ VJE=0.75 MJE=0.33 CJC=7.306E-12 VJC=0.75 MJC=0.3 XCJC=1 CJS=0
++ VJS=0.75 MJS=0.5 XTB=1.5 EG=1.11 XTI=3 FC=0.5)
+
+* DC sweep analysis: sweep control voltage from -5V to +5V
+.dc VIN -5 5 0.1
+
+* Print measurements
+.print dc V(cv) V(c_ref) V(c_exp) I(RC1) I(RC2)
+
+* Measure output current exponential relationship
+.meas dc IREF FIND I(RC1) WHEN V(cv)=0
+.meas dc IOUT FIND I(RC2) WHEN V(cv)=0
+
+* Save results for plotting
+.save all
+
+.end
