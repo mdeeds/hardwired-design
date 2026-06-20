@@ -1,0 +1,3 @@
+# Python dependencies for scripts in this folder
+# Install with: pip install -r requirements.txt
+Pillow>=10.0.0
